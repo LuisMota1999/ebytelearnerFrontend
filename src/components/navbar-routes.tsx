@@ -4,7 +4,7 @@ import { LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import ButtonLogout from "./ButtonLogout";
+import ButtonLogout from "./buttonLogout";
 
 export const NavbarRoutes = () => {
     const pathname = usePathname();

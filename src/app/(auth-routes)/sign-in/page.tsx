@@ -28,7 +28,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-auto lg:h-full flex-1 px-20 text-center">
+    <div className="flex flex-col items-center justify-center w-full h-auto md:h-full lg:h-full flex-1 px-20 text-center">
       <div className="bg-white rounded-2xl shadow-2xl flex flex-col lg:flex-row w-auto max-w-4xl mb-4 sm:mb-0">
         {/* Hello Friend section */}
         <div className="w-full lg:w-2/5 bg-green-500 text-white rounded-t-2xl lg:rounded-tr-none lg:rounded-bl-2xl py-36 px-12 order-2 lg:order-1">
