@@ -12,7 +12,7 @@ const nextAuthOptions: NextAuthOptions = {
 
       async authorize(credentials, req) {
         try {
-          const res = await fetch("http://localhost:5033/Auth/Login", {
+          const res = await fetch(process.env.API_NEXT_URL+"/Auth/Login", {
             method: "POST",
             body: JSON.stringify(credentials),
             headers: { "Accept": "*/*", "Content-Type": "application/json" },
