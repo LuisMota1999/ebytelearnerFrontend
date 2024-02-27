@@ -46,7 +46,7 @@ export default function Home() {
           </a>
         </div>
         {/* Sign in section */}
-        <div className="w-full sm:w-[150%] lg:w-3/5 p-5 order-1 lg:order-2">
+        <div className="w-full lg:w-3/5 p-5 order-1 lg:order-2">
           <div className="text-left font-bold">
             <span className="text-green-500">ebyte</span> Learner
           </div>
