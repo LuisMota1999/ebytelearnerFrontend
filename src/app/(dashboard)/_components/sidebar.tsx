@@ -4,7 +4,7 @@ import { SidebarRoutes } from "./sidebar-routes";
 export const Sidebar = () => {
   return (
     <div className="h-full border-r flex flex-col overflow-y-auto bg-white shadow-sm">
-      <div className="p-6 flex justify-center">
+      <div className="p-6 flex flex-col justify-center items-center">
         <Logo/>
       </div>
       <div className="flex flex-col w-full">

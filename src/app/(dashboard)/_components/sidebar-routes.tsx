@@ -4,8 +4,9 @@ import { BarChart, Calendar, Compass, Layout, List } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { SidebarItem } from "./sidebar-item";
+import { useSession } from "next-auth/react";
 
-const guestRoutes = [
+const sharedRoutes = [
   {
     icon: Layout,
     label: "Dashboard",
@@ -15,6 +16,14 @@ const guestRoutes = [
     icon: Compass,
     label: "Browse",
     href: "/search",
+  },
+]
+
+const guestRoutes = [
+  {
+    icon: List,
+    label: "Courses",
+    href: "/user/courses",
   },
 ];
 
@@ -37,15 +46,22 @@ const teacherRoutes = [
 ]
 
 export const SidebarRoutes = () => {
-  const pathname = usePathname();
+  const session = useSession();
 
-  const isTeacherPage = pathname?.includes("/teacher");
+  const routesRoleBased = session.data?.Role == "Admin" ? teacherRoutes : guestRoutes;
 
-  const routes = isTeacherPage ? teacherRoutes : guestRoutes;
-
+  
   return (
     <div className="flex flex-col w-full">
-      {routes.map((route) => (
+      {sharedRoutes.map((route) => (
+        <SidebarItem
+          key={route.href}
+          icon={route.icon}
+          label={route.label}
+          href={route.href}
+        />
+      ))}
+      {routesRoleBased.map((route) => (
         <SidebarItem
           key={route.href}
           icon={route.icon}

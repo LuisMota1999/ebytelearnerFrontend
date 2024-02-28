@@ -16,6 +16,7 @@ declare module "next-auth" {
       Birthday: Date | null;
     };
     AccessToken: string;
+    Role: string;
   }
 }
 

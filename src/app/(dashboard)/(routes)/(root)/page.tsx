@@ -63,11 +63,11 @@ export default function HomePage() {
   return (
     <div className="p-4">
       <div className="grid gap-4 grid-cols-6">
-        <div className="col-span-6 sm:col-span-4">
+        <div className="col-span-6 lg:col-span-4">
           <Card className="bg-[#d7f4e7] flex flex-col items-center text-center sm:text-left md:flex-row md:items-start ">
             <div className="md:w-1/2">
               {/* Content for the larger column */}
-              <CardHeader>
+              <CardHeader className="flex flex-col items-center sm:items-start space-y-1.5 p-6">
                 <CardTitle>
                   Welcome back 👋 <p>{session?.User.Username}</p>
                 </CardTitle>
@@ -102,7 +102,7 @@ export default function HomePage() {
 
       <div className="pt-4 grid gap-4 md:grid-cols-6 lg:grid-cols-6">
         {courses.map((course, index) => (
-          <div className="col-span-6 sm:col-span-2" key={index}>
+          <div className="col-span-6  md:col-span-3 lg:col-span-2" key={index}>
             <Card className="h-full">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
