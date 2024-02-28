@@ -1,60 +1,76 @@
-"use client"
-import React from 'react';
-import { LogOut } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-import { Button } from './ui/button';
-import Link from 'next/link';
-import ButtonLogout from './buttonLogout';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+"use client";
+import React from "react";
+import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react"
+import { useRouter } from 'next/navigation'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useSession } from "next-auth/react";
 export const NavbarRoutes = () => {
-    const pathname = usePathname();
-    const isTeacherPage = pathname?.startsWith('/teacher');
-    const isCoursePage = pathname?.includes('/courses');
-    const { data: session } = useSession();
-    
-    return (
-        <div className="flex items-center ml-auto relative">
-            {isTeacherPage || isCoursePage ? (
-                <Link href="/">
-                    <Button size="sm" variant="ghost">
-                        <LogOut className="h-4 w-4 mr-2" />
-                        Exit
-                    </Button>
-                </Link>
-            ) : (
-                <Link href="/teacher/courses">
-                    <Button size="sm" variant="ghost">
-                        Teacher Mode
-                    </Button>
-                </Link>
-            )}
+  const pathname = usePathname();
+  const { data: session } = useSession();
+  const router = useRouter()
 
-            <div className="relative">
-                <DropdownMenu>
-                    <DropdownMenuTrigger>
-                        <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png" />
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
-                    </DropdownMenuTrigger>
-                    <div className="absolute right-0 mt-2">
-                        <DropdownMenuContent>
-                            <DropdownMenuLabel>{session?.User.Username}</DropdownMenuLabel>
-                            <DropdownMenuLabel>{session?.User.Email}</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Home</DropdownMenuItem>
-                            <DropdownMenuItem>Profile</DropdownMenuItem>
-                            <DropdownMenuItem>Settings</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                <ButtonLogout />
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </div>
-                </DropdownMenu>
+  async function logout() {
+      await signOut({
+          redirect: false
+      })
+
+      router.replace('/sign-in')
+  }
+  return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent>
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium leading-none">
+                {session?.User.Username}
+              </p>
+              <p className="text-xs leading-none text-muted-foreground">
+                {session?.User.Email}
+              </p>
             </div>
-        </div>
-    );
+          </DropdownMenuLabel>
+
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              Profile
+              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              Billing
+              <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              Settings
+              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+            </DropdownMenuItem>
+            <DropdownMenuItem>New Team</DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={logout}>
+            
+            Log out
+            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+  );
 };
