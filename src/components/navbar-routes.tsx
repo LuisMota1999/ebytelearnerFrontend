@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ export const NavbarRoutes = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const { setTheme } = useTheme();
+  const theme = useTheme().theme;
   async function logout() {
     await signOut({
       redirect: false,
@@ -34,13 +35,7 @@ export const NavbarRoutes = () => {
   return (
     <div className="w-full flex flex-row-reverse">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            <span className="sr-only">Toggle theme</span>
-          </Button>
-        </DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild></DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem onClick={() => setTheme("light")}>
             Light
@@ -87,7 +82,22 @@ export const NavbarRoutes = () => {
               Settings
               <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
             </DropdownMenuItem>
-            <DropdownMenuItem>New Team</DropdownMenuItem>
+            {/* <DropdownMenuItem
+              onClick={() =>
+                theme === "light" ? setTheme("dark") : setTheme("light")
+              }
+            >
+              Theme
+              <DropdownMenuShortcut>
+                <div className="flex items-center justify-end">
+                  <Sun
+                    size={18}
+                    className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+                  />
+                  <Moon className="rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                </div>
+              </DropdownMenuShortcut>
+            </DropdownMenuItem> */}
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={logout}>
