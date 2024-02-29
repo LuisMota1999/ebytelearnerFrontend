@@ -51,7 +51,7 @@ export default function CoursesList() {
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return <div><NoResults/></div>;
   }
   return (
     <div className="space-y-4">
