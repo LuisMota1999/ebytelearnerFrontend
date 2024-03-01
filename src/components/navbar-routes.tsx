@@ -27,7 +27,7 @@ export const NavbarRoutes = () => {
   const theme = useTheme().theme;
   async function logout() {
     await signOut({
-      redirect: false,
+      redirect: true,
     });
 
     router.replace("/sign-in");

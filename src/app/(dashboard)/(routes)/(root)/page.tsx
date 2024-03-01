@@ -4,20 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import CoursesList from "@/components/course-List";
-
-interface Course {
-  Id: string;
-  CourseName: string;
-  CourseDescription: string;
-  CoursePrice: number;
-  Modules: Module[];
-}
-
-interface Module {
-  Id: string;
-  ModuleName: string;
-}
 
 export default function HomePage() {
   const { data: session } = useSession();

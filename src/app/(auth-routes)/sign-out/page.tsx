@@ -1,7 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { SyntheticEvent, useState } from "react";
 import {FaEye, FaEyeSlash, FaFacebook, FaGoogle, FaLinkedin, FaLock, FaUser} from 'react-icons/fa'
 import { MdError } from "react-icons/md";
@@ -21,22 +21,21 @@ export default function Home() {
 
   async function handleSubmit(event: SyntheticEvent) {
     event.preventDefault();
+    try {
+        const res = await fetch(process.env.API_NEXT_URL+"/Auth/Register", {
+          method: "POST",
+          body: JSON.stringify(""),
+          headers: { "Accept": "*/*", "Content-Type": "application/json" },
+        });
 
-    const result = await signIn("credentials", {
-      username,
-      password,
-      redirect: false,
-    });
-    
-    if (result?.error) {
-      setPassword("");
-      
-      setError("Invalid username or password.");
-      
-      return;
-    }
-
-    router.replace("/");
+        if (res.ok) {
+          return redirect("/sign-in");
+        }
+        
+      } catch (error) {
+        console.error("Error during fetch:", error);
+        
+      }
   }
 
   return (

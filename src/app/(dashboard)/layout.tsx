@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { ReactNode, Suspense } from "react";
 import { redirect } from "next/navigation";
 import { nextAuthOptions } from "../api/auth/[...nextauth]/route";
+import { useSession } from "next-auth/react";
 
 
 interface PrivateLayoutProps {
@@ -13,6 +14,7 @@ interface PrivateLayoutProps {
 export default async function DashboardLayout({
   children,
 }: PrivateLayoutProps) {
+  
   const session = await getServerSession(nextAuthOptions);
 
   if (!session) {

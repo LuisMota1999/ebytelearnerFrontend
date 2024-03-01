@@ -1,6 +1,6 @@
 import CourseCard from "@/components/ui/course-card";
 import NoResults from "@/components/ui/no-results";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Item } from "@radix-ui/react-dropdown-menu";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -31,7 +31,7 @@ export default function CoursesList() {
         });
 
         const data = await response.json();
-        console.log("response", data);
+
         setCourses(data);
         setLoading(false);
       } catch (error) {
@@ -51,24 +51,26 @@ export default function CoursesList() {
   }
 
   if (error) {
-    return <div><NoResults/></div>;
+    return (
+      <div>
+        <NoResults />
+      </div>
+    );
   }
   return (
     <div className="space-y-4">
       {courses.length === 0 && <NoResults />}
       <div className="grid gap-4 grid-cols-6">
         {courses.map((item, index) => (
-          <>
-            <div className="col-span-6  md:col-span-3 lg:col-span-2">
-              <CourseCard
-                key={index}
-                CourseName={item.CourseName}
-                CoursePrice={item.CoursePrice}
-                CourseDescription={item.CourseDescription}
-                CourseImage="https://images.unsplash.com/1/work-station-straight-on-view.jpg"
-              />
-            </div>
-          </>
+          <div className="col-span-6  md:col-span-3 lg:col-span-2">
+            <CourseCard
+              key={index}
+              CourseName={item.CourseName}
+              CoursePrice={item.CoursePrice}
+              CourseDescription={item.CourseDescription}
+              CourseImage="https://images.unsplash.com/1/work-station-straight-on-view.jpg"
+            />
+          </div>
         ))}
       </div>
     </div>
