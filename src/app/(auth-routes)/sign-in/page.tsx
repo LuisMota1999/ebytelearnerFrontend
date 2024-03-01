@@ -3,8 +3,17 @@
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SyntheticEvent, useState } from "react";
-import {FaEye, FaEyeSlash, FaFacebook, FaGoogle, FaLinkedin, FaLock, FaUser} from 'react-icons/fa'
+import {
+  FaEye,
+  FaEyeSlash,
+  FaFacebook,
+  FaLinkedin,
+  FaLock,
+  FaUser,
+} from "react-icons/fa";
 import { MdError } from "react-icons/md";
+import { FcGoogle } from "react-icons/fc";
+
 export default function Home() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -27,12 +36,12 @@ export default function Home() {
       password,
       redirect: false,
     });
-    
+
     if (result?.error) {
       setPassword("");
-      
+
       setError("Invalid username or password.");
-      
+
       return;
     }
 
@@ -72,19 +81,19 @@ export default function Home() {
                 href="#"
                 className="border-2 border-gray-200 rounded-full p-3 mx-1 hover:bg-gray-200"
               >
-                <FaFacebook className="text-sm"></FaFacebook>
+                <FaFacebook className="text-sm text-blue-500"></FaFacebook>
               </a>
               <a
                 href="#"
                 className="border-2 border-gray-200 rounded-full p-3 mx-1 hover:bg-gray-200"
               >
-                <FaLinkedin className="text-sm"></FaLinkedin>
+                <FaLinkedin className="text-sm text-blue-400"></FaLinkedin>
               </a>
               <a
                 href="#"
                 className="border-2 border-gray-200 rounded-full p-3 mx-1 hover:bg-gray-200"
               >
-                 <FaGoogle className="text-sm"></FaGoogle>
+                <FcGoogle className="text-sm"></FcGoogle>
               </a>
             </div>
             <p className="text-gray-500 my-3">or use your email account</p>
@@ -108,21 +117,31 @@ export default function Home() {
                 <FaLock className="text-gray-400 mr-2"></FaLock>
                 <input
                   className="bg-gray-100 outline-none text-sm flex-1"
-                  type={showPassword? "text" : "password"}
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={handleInputFocus}
-                  ></input>
+                ></input>
                 <span
                   onClick={togglePasswordVisibility}
                   className="icon-password"
                 >
-                  {showPassword ? <FaEye color="text-gray-800"/>: <FaEyeSlash color="text-gray-800"/>  }
+                  {showPassword ? (
+                    <FaEye className="text-gray-500 hover:text-gray-700 cursor-pointer" />
+                  ) : (
+                    <FaEyeSlash className="text-gray-500 hover:text-gray-700 cursor-pointer" />
+                  )}
                 </span>
               </div>
-              {error && <div className="bg-white w-64 p-2 flex items-center mb-3 flex-row"><p className="text-red-500 text-xs text-left flex flex-row"><MdError/> &nbsp;{ error}</p></div>}
+              {error && (
+                <div className="bg-white w-64 p-2 flex items-center mb-3 flex-row">
+                  <p className="text-red-500 text-xs text-left flex flex-row">
+                    <MdError /> &nbsp;{error}
+                  </p>
+                </div>
+              )}
               <div className="flex w-64 mb-5 justify-between">
                 <label className="flex items-center text-xs">
                   <input
@@ -132,7 +151,10 @@ export default function Home() {
                   ></input>
                   Remember me
                 </label>
-                <a href="/forgot-password" className="text-xs underline hover:text-gray-500">
+                <a
+                  href="/forgot-password"
+                  className="text-xs underline hover:text-gray-500"
+                >
                   Forgot Password?
                 </a>
               </div>

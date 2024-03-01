@@ -3,6 +3,7 @@ import NoResults from "@/components/ui/no-results";
 import { Item } from "@radix-ui/react-dropdown-menu";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import Loading from "./ui/loading";
 
 interface Course {
   Id: string;
@@ -47,7 +48,9 @@ export default function CoursesList() {
   }, [session?.AccessToken]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Loading interval={70}/>
+    );
   }
 
   if (error) {
