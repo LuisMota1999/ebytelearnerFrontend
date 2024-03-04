@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -15,12 +15,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "next-auth/react";
-import { Button } from "../../../components/ui/button";
-import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { IoSettingsOutline } from "react-icons/io5";
 
 export const NavbarRoutes = () => {
-  const pathname = usePathname();
   const { data: session } = useSession();
   const router = useRouter();
   const { setTheme } = useTheme();
@@ -34,6 +32,7 @@ export const NavbarRoutes = () => {
   }
   return (
     <div className="w-full flex flex-row-reverse">
+      <IoSettingsOutline className="rounded-full animate-spin-slow" />
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -54,7 +53,6 @@ export const NavbarRoutes = () => {
               </p>
             </div>
           </DropdownMenuLabel>
-
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>

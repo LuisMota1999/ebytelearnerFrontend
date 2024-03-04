@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import Currency  from "@/components/ui/currency";
 import IconButton  from "@/components/ui/icon-button";
+import CourseCardDetails from "./course-detail-item";
 
 interface CourseProps {
   CourseName: string;
@@ -47,6 +48,11 @@ const CourseCard: React.FC<CourseProps> = ({CourseName, CourseDescription, Cours
         <p className="font-semibold text-lg">{CourseName}</p>
         <p className="text-sm text-gray-500">{CourseDescription}</p>
       </div>
+      <CourseCardDetails
+          CourseEstimatedTime={2}
+          CourseChapter={3}
+          CourseTeacher={"teste"}
+        />
       {/* Price & Reiew */}
       <div className="flex items-center justify-between">
         <Currency value={CoursePrice} />

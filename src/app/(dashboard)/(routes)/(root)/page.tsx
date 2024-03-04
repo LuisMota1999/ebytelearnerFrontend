@@ -49,13 +49,15 @@ export default function HomePage() {
                     alt="teacher"
                     src="/teacherDashboard.svg"
                     className="self-center"
+                    loading="lazy"
                   />
                   <Image
                     height={75}
                     width={75}
                     alt="teacherPerson"
                     src="/character_3.png"
-                    className="self-center  inset-0 w-1/2 h-1/2 object-cover ml-[-60px]"
+                    className="self-center inset-0 w-auto h-auto object-cover ml-[-60px]"
+                    loading="lazy"
                   />
                 </CardContent>
               </div>
@@ -70,13 +72,12 @@ export default function HomePage() {
                   Upcoming Session
                 </CardTitle>
                 <CardDescription className="flex flex-row justify-between">
-                  <Link
-                    href="/teacher/calendar"
-                   
-                  >
-                    <FaRegCalendarAlt size={20} className="mt-[0.1rem] text-gray-600"/>
+                  <Link href="/teacher/calendar">
+                    <FaRegCalendarAlt
+                      size={20}
+                      className="mt-[0.1rem] text-gray-600 hover:text-blue-400"
+                    />
                   </Link>
-                  
                 </CardDescription>
               </CardHeader>
               <CardContent className="overflow-y-auto">
@@ -150,11 +151,12 @@ export default function HomePage() {
                   If you are going to use a passage of Lorem Ipsum, you need to
                   be sure there isn't anything.
                 </p>
+              </CardHeader>
+              <CardContent className="flex items-center justify-center">
                 <Button variant="green" size="md">
                   <b>Go Now</b>
                 </Button>
-              </CardHeader>
-              <CardContent className="flex justify-center"></CardContent>
+              </CardContent>
             </Card>
           </div>
         </div>
