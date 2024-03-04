@@ -56,8 +56,7 @@ export default function Home() {
           <h2 className="text-3xl font-bold mb-2">Hello, Friend!</h2>
           <div className="border-2 w-10 border-white inline-block mb-2"></div>
           <p className="mb-6 text-xs sm:text-base">
-            Fill up personal information and start journey learning byte per
-            byte with us.
+          Byte by Byte, Learn with Ease. Welcome to <span className="underline">eByteLearner</span>, Where Knowledge Unlocks!
           </p>
           <a
             href="sign-up"
