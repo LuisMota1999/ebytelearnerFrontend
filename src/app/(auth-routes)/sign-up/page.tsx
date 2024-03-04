@@ -1,62 +1,61 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import * as z from "zod";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import {
   FaEye,
   FaEyeSlash,
   FaFacebook,
-  FaGoogle,
   FaLinkedin,
   FaLock,
-  FaAddressCard,
   FaUser,
 } from "react-icons/fa";
-import { MdError, MdOutlineAlternateEmail, MdEmail } from "react-icons/md";
+import { MdEmail } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
-import * as z from "zod";
+import { BiSolidLockOpen } from "react-icons/bi";
 
-const formSchema = z.object({
-  username: z.string().min(6, {
-    message: "Username must be at least 6 characters.",
-  }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
-  nif: z.string().min(6, {
-    message: "NIF is not valid.",
-  }),
-  email: z.string().email({
-    message: "Email is not valid.",
-  }),
-});
+const formSchema = z
+  .object({
+    username: z.string().min(6, {
+      message: "Username must be at least 6 characters.",
+    }),
+    password: z.string().min(6, {
+      message: "Password must be at least 6 characters.",
+    }),
+    email: z.string().email({
+      message: "Email is not valid.",
+    }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.confirmPassword === data.password, {
+    message: "Password does not match",
+    path: ["confirmPassword"],
+  });
 
 export default function Home() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema), //
+    resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
       password: "",
-      nif: "",
+      confirmPassword: "",
       email: "",
     },
   });
-  const { isSubmitting, isValid } = form.formState;
+  const { isSubmitting } = form.formState;
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -69,9 +68,9 @@ export default function Home() {
         body: JSON.stringify(values),
         headers: { Accept: "*/*", "Content-Type": "application/json" },
       });
-      console.log(res);
+
       if (res.ok) {
-        router.replace("/sign-in");;
+        router.replace("/sign-in");
       }
     } catch (error) {
       console.error("Error during fetch:", error);
@@ -138,8 +137,9 @@ export default function Home() {
                   name="username"
                   render={({ field }) => (
                     <FormItem>
+                      <FormMessage className="text-xs  items-left text-left" />
                       <FormControl>
-                        <div className="bg-gray-100 w-64 px-2 flex items-center mb-3">
+                        <div className="bg-gray-100 w-64 px-2 flex items-center my-2">
                           <FaUser className="text-gray-400 mr-2"></FaUser>
                           <Input
                             disabled={isSubmitting}
@@ -150,10 +150,6 @@ export default function Home() {
                           />
                         </div>
                       </FormControl>
-                      <FormMessage>
-                        {form.formState.errors.username?.message}
-                      </FormMessage>{" "}
-                      {/* Display validation error message */}
                     </FormItem>
                   )}
                 />
@@ -162,8 +158,9 @@ export default function Home() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
+                      <FormMessage className="text-xs items-left text-left" />
                       <FormControl>
-                        <div className="bg-gray-100 w-64 px-2 flex items-center mb-3">
+                        <div className="bg-gray-100 w-64 px-2 flex items-center my-2">
                           <MdEmail className="text-gray-400 mr-2"></MdEmail>
                           <Input
                             disabled={isSubmitting}
@@ -174,48 +171,46 @@ export default function Home() {
                           />
                         </div>
                       </FormControl>
-                      <FormMessage>
-                        {form.formState.errors.email?.message}
-                      </FormMessage>{" "}
-                      {/* Display validation error message */}
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="nif"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <div className="bg-gray-100 w-64 px-2 flex items-center mb-3">
-                          <FaAddressCard className="text-gray-400 mr-2"></FaAddressCard>
-                          <Input
-                            disabled={isSubmitting}
-                            placeholder="NIF"
-                            className="bg-gray-100 outline-none text-sm flex-1 border-none"
-                            type="text"
-                            {...field}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage>
-                        {form.formState.errors.nif?.message}
-                      </FormMessage>{" "}
-                      {/* Display validation error message */}
-                    </FormItem>
-                  )}
-                />
+
                 <FormField
                   control={form.control}
                   name="password"
                   render={({ field }) => (
                     <FormItem>
+                      <FormMessage className="text-xs items-left text-left" />
                       <FormControl>
-                        <div className="bg-gray-100 w-64 px-2 flex items-center mb-3">
+                        <div className="bg-gray-100 w-64 px-2 flex items-center my-2">
                           <FaLock className="text-gray-400 mr-2"></FaLock>
                           <Input
                             type={showPassword ? "text" : "password"}
                             placeholder="New Password"
+                            disabled={isSubmitting}
+                            className="bg-gray-100 outline-none text-sm flex-1 border-none"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormMessage className="text-xs items-left text-left" />
+                      <FormControl>
+                        <div className="bg-gray-100 w-64 px-2 flex items-center my-2">
+                          <BiSolidLockOpen
+                            size={20}
+                            className="text-gray-400 mr-2"
+                          ></BiSolidLockOpen>
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Confirm Password"
                             disabled={isSubmitting}
                             className="bg-gray-100 outline-none text-sm flex-1 border-none"
                             {...field}
@@ -232,23 +227,16 @@ export default function Home() {
                           </span>
                         </div>
                       </FormControl>
-                      <FormMessage>
-                        {form.formState.errors.password?.message}
-                      </FormMessage>{" "}
-                      {/* Display validation error message */}
                     </FormItem>
                   )}
                 />
-
                 <button
                   type="submit"
-                  className="border-2 border-[#00A76F] rounded-full px-12 py-2 mt-1 2xl:mt-4 inline-block font-semibold hover:bg-gray-100 hover:text-[#00A76F] hover:border-gray-300"
-                  disabled={!isValid || isSubmitting}
+                  className="border-2 border-[#00A76F] rounded-full px-12 py-2 mt-4 2xl:mt-4 inline-block font-bold hover:bg-white hover:text-[#00A76F] hover:border-gray-400 cursor-pointer "
+                  disabled={isSubmitting ? true : false}
                 >
                   Sign Up
                 </button>
-
-               
               </form>
             </Form>
           </div>
