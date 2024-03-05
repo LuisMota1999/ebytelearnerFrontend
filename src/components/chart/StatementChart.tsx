@@ -43,7 +43,7 @@ const StatementChart: FC<Props> = ({ statement }) => {
       aria-label="Statement Chart"
       className="w-full bg-white text-black flex flex-col justify-center rounded-xl "
     >
-      <div className="w-full mt-14 h-48">
+      <div className="w-full h-auto">
         <Bar
           data={{
             labels,
