@@ -2,7 +2,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { cn } from "@/lib/utils";
 import CourseCardDetails from "./course-detail-item";
 
-interface RecentCourseProps {
+interface CourseItemProps {
   CourseName: string;
   CourseDescription: string;
   CourseIcon: any;
@@ -12,7 +12,7 @@ interface RecentCourseProps {
   ClassName?: string;
 }
 
-const RecentCourseCard: React.FC<RecentCourseProps> = ({
+const CourseItem: React.FC<CourseItemProps> = ({
   CourseName,
   CourseDescription,
   CourseIcon,
@@ -50,4 +50,4 @@ const RecentCourseCard: React.FC<RecentCourseProps> = ({
   );
 };
 
-export default RecentCourseCard;
+export default CourseItem;

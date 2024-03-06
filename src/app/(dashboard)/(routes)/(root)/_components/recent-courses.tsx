@@ -1,6 +1,6 @@
 import { IoBookSharp, IoCloud } from "react-icons/io5";
 import { RiPagesFill } from "react-icons/ri";
-import RecentCourseCard from "../../../../../components/course/course-item";
+import RecentCourseCard from "@/components/course/course-item";
 
 interface RecentCourse {
   CourseName: string;
@@ -47,7 +47,7 @@ const recentCoursesData: RecentCourse[] = [
 
 export function RecentCourses() {
   return (
-    <div className="space-y-8 max-h-[11rem] overflow-y-auto">
+    <div className="space-y-8 max-h-[20rem] overflow-y-auto">
       {recentCoursesData.map((item, index) => (
         <RecentCourseCard
           key={index}

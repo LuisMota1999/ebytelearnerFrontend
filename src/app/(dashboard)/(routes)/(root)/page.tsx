@@ -141,7 +141,7 @@ export default function HomePage() {
         </div>
         <div className="col-span-6 lg:col-span-2">
           <div className="flex flex-col h-full">
-            <Card className="shadow-sm bg-slate-100">
+            <Card className="shadow-sm ">
               <CardHeader className="flex flex-row justify-between">
                 <CardTitle className="text-xl font-bold">
                   Upcoming Session
