@@ -1,39 +1,30 @@
-export interface Product {
-    id: string;
-    category: Category;
-    name: string;
-    price: string;
-    isFeatured: boolean;
-    size: Size;
-    color: Color;
-    images: Image[]
-  };
-  
-  export interface Image {
-    id: string;
+interface Article {
+    source: {
+        id: string;
+        name: string;
+    };
+    author: string;
+    title: string;
+    description: string;
     url: string;
-  }
-  
-  export interface Billboard {
-    id: string;
-    label: string;
-    imageUrl: string;
-  };
-  
-  export interface Category {
-    id: string;
-    name: string;
-    billboard: Billboard;
-  };
-  
-  export interface Size {
-    id: string;
-    name: string;
-    value: string;
-  };
-  
-  export interface Color {
-    id: string;
-    name: string;
-    value: string;
-  };
+    urlToImage: string;
+    publishedAt: string;
+    content: string;
+}
+
+export interface ArticleResponse {
+    status: string;
+    totalResults: number;
+    articles: Article[];
+}
+
+
+export interface RecentNews {
+  CourseName: string;
+  CourseIcon: any;
+  CourseDescription: string;
+  CourseTeacher: string;
+  CourseEstimatedTime: number;
+  CourseChapter: number;
+  ClassName?: string;
+}

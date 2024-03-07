@@ -12,7 +12,7 @@ const nextAuthOptions: NextAuthOptions = {
 
       async authorize(credentials, req) {
         try {
-          const res = await fetch(process.env.API_NEXT_URL+"/Auth/Login", {
+          const res = await fetch(process.env.NEXT_PUBLIC_API_NEXT_URL+"/Auth/Login", {
             method: "POST",
             body: JSON.stringify(credentials),
             headers: { "Accept": "*/*", "Content-Type": "application/json" },
@@ -31,9 +31,6 @@ const nextAuthOptions: NextAuthOptions = {
       },
     }),
   ],
-  pages: {
-    signIn: "/sign-in",
-  },
   callbacks: {
     async jwt({ token, user }) {
       user && (token.user = user);

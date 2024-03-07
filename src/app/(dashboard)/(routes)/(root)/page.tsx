@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import {
   Card,
   CardContent,
@@ -17,6 +17,8 @@ import { ImNewspaper } from "react-icons/im";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import StatementChart from "@/components/chart/StatementChart";
 import { DailyAmount } from "@/components/chart/types";
+import RecentNews from "./_components/recent-news";
+import Loading from "./loading";
 
 export default function HomePage() {
   const { data: session } = useSession();
@@ -102,13 +104,14 @@ export default function HomePage() {
             <Card className="shadow-sm ">
               <CardHeader className="flex flex-row items-center justify-between ">
                 <CardTitle className="text-xl font-bold">
-                 Time Spent - Last 7 Days
+                  Time Spent - Last 7 Days
                 </CardTitle>
-                
               </CardHeader>
-              <CardContent>
-                <StatementChart statement={rawData as DailyAmount[]} />
-              </CardContent>
+              <Suspense fallback={<Loading />}>
+                <CardContent>
+                  <StatementChart statement={rawData as DailyAmount[]} />
+                </CardContent>
+              </Suspense>
             </Card>
           </div>
         </div>
@@ -162,7 +165,9 @@ export default function HomePage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="overflow-y-auto">
-                <RecentCourses />
+                <Suspense fallback={<Loading />}>
+                  <RecentCourses />
+                </Suspense>
               </CardContent>
             </Card>
           </div>
@@ -177,7 +182,9 @@ export default function HomePage() {
                 <ImNewspaper size={20} />
               </CardHeader>
               <CardContent>
-                <RecentCourses />
+                <Suspense fallback={<Loading />}>
+                  <RecentNews />
+                </Suspense>
               </CardContent>
             </Card>
           </div>
