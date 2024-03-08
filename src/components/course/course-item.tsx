@@ -25,7 +25,7 @@ const CourseItem: React.FC<CourseItemProps> = ({
     <div className="flex items-center">
       <div
         className={cn(
-          "h-12 w-12 rounded-md flex items-center justify-center md:hidden 2xl:flex",
+          "h-14 w-14 rounded-md flex items-center justify-center lg:hidden 2xl:flex",
           ClassName
         )}
       >

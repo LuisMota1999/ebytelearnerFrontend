@@ -41,7 +41,7 @@ const StatementChart: FC<Props> = ({ statement }) => {
   return (
     <section
       aria-label="Statement Chart"
-      className="w-full bg-white text-black flex flex-col justify-center rounded-xl "
+      className="w-full bg-white text-black flex flex-col h-full flex-grow justify-center rounded-xl "
     >
       <div className="w-full h-auto">
         <Bar

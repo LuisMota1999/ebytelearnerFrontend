@@ -1,49 +1,48 @@
-import NoResults from "@/components/ui/no-results";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import useSWR from 'swr';
+import { useSession } from 'next-auth/react';
+import { ArticleResponse } from '@/types/types';
+import { fetchDataAndCache } from '@/app/utils/fetchData';
+import ArticleItem from '@/components/article/article-item';
+import NoResults from '@/components/ui/no-results';
 
-import { ArticleResponse } from "@/types/types";
-import { fetchDataAndCache } from "@/app/utils/fetchData";
-import ArticleItem from "@/components/article/article-item";
+const fetcher = async (url: string) => {
+  const data = await fetchDataAndCache<ArticleResponse>(
+    url,
+    'recentArticles',
+    3600
+  );
+  return data;
+};
 
 export default function RecentNews() {
   const { data: session } = useSession();
-  const [articles, setArticles] = useState<ArticleResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const data = await fetchDataAndCache<ArticleResponse>(
-          `https://newsapi.org/v2/top-headlines?pageSize=5&country=us&category=technology&sortBy=popularity&apiKey=${process.env.NEXT_PUBLIC_NEWS_API_KEY}`,
-          "recentArticles",
-          3600
-        );
-        setArticles(data);
-      } catch (error) {
-        setError(
-          `Error fetching data. Please try again later. Error description: ${error}`
-        );
-      }
-    };
-
-    if (session?.AccessToken) {
-      fetchArticles();
-    }
-  }, [session?.AccessToken]);
+  const { data: articles, error, isLoading } = useSWR(
+    session?.AccessToken
+      ? `https://newsapi.org/v2/top-headlines?pageSize=5&country=us&category=technology&sortBy=popularity&apiKey=${process.env.NEXT_PUBLIC_NEWS_API_KEY}`
+      : null,
+    fetcher
+  );
 
   if (error) {
     console.log(error);
   }
+  
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-48">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
 
   return (
     <div>
-      {articles?.totalResults === 0 ? (
+      {articles && articles.totalResults === 0 ? (
         <NoResults />
       ) : (
         <div className="space-y-8 max-h-[13rem] 2xl:max-h-[20rem] overflow-y-auto">
-          
-            {articles?.articles.map((item, index) => (
+          {articles &&
+            articles.articles.map((item, index) => (
               <ArticleItem
                 key={index}
                 ArticleTitle={item.title}
@@ -54,7 +53,6 @@ export default function RecentNews() {
                 ArticlePublishedAt={item.publishedAt}
               />
             ))}
-          
         </div>
       )}
     </div>
