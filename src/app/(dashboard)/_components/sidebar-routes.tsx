@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart, Calendar, Compass, Layout, List } from "lucide-react";
+import { BarChart, Calendar, Compass, Layout, List, SquarePen } from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
 import { useSession } from "next-auth/react";
 
@@ -9,16 +9,30 @@ const sharedRoutes = [
     icon: Layout,
     label: "Dashboard",
     href: "/",
+    children: [],
   },
   {
     icon: Compass,
     label: "Browse",
     href: "/search",
+    children: [],
   },
   {
     icon: List,
     label: "My Courses",
     href: "/courses",
+    children: [
+      {
+        icon: SquarePen,
+        label: "Create",
+        href: "/courses/create",
+      },
+      {
+        icon: SquarePen,
+        label: "Create",
+        href: "/courses/create",
+      },
+    ],
   },
 ];
 
@@ -27,16 +41,30 @@ const teacherRoutes = [
     icon: List,
     label: "Courses",
     href: "/courses",
+    children: [
+      {
+        icon: SquarePen,
+        label: "Create",
+        href: "/courses/create",
+      },
+      {
+        icon: SquarePen,
+        label: "Create",
+        href: "/courses/create",
+      },
+    ],
   },
   {
     icon: BarChart,
     label: "Analytics",
     href: "/analytics",
+    children: [],
   },
   {
     icon: Calendar,
     label: "Calendar",
     href: "/calendar",
+    children: [],
   },
 ];
 
@@ -48,7 +76,9 @@ export const SidebarRoutes = () => {
     ...sharedRoutes,
     ...teacherRoutes.filter(
       (teacherRoute) =>
-        !sharedRoutes.some((sharedRoute) => sharedRoute.href === teacherRoute.href)
+        !sharedRoutes.some(
+          (sharedRoute) => sharedRoute.href === teacherRoute.href
+        )
     ),
   ];
 
@@ -60,12 +90,13 @@ export const SidebarRoutes = () => {
 
   return (
     <div className="flex flex-col w-full">
-      {routesRoleBased.map((route) => (
+      {routesRoleBased.map((route, index) => (
         <SidebarItem
-          key={route.href}
+          key={index}
           icon={route.icon}
           label={route.label}
           href={route.href}
+          children={route.children}
         />
       ))}
     </div>

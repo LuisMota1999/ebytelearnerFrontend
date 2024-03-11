@@ -4,17 +4,35 @@ import { LucideIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import AccordionSidebarComponent from "./sidebar-accordion";
+import ButtonSidebarComponent from "./sidebar-button";
 
 interface SidebarItemProps {
   icon: LucideIcon;
   label: string;
   href: string;
-};
+  children: SidebarItemChildrenProps[];
+}
+
+interface SidebarItemChildrenProps {
+  icon?: LucideIcon;
+  label?: string;
+  href?: string;
+}
 
 export const SidebarItem = ({
   icon: Icon,
   label,
   href,
+  children,
 }: SidebarItemProps) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -26,33 +44,16 @@ export const SidebarItem = ({
 
   const onClick = () => {
     router.push(href);
-  }
+  };
 
   return (
-    <button
-      onClick={onClick}
-      type="button"
-      className={cn(
-        "flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-6 transition-all hover:text-slate-600 hover:bg-slate-300/20",
-        isActive && "text-green-800 bg-sky-200/20 hover:bg-sky-200/20 hover:text-green-800"
+    <>
+      {children.length > 0 ? (
+        <AccordionSidebarComponent label={label} children={children} isActive={isActive} Icon={Icon} />
+      ) : (
+        <ButtonSidebarComponent label={label} onClick={onClick} isActive={isActive} Icon={Icon} />
       )}
-    >
-      <div className="flex items-center gap-x-2 py-4">
-        <Icon
-          size={22}
-          className={cn(
-            "text-slate-500",
-            isActive && "text-green-800"
-          )}
-        />
-        {label}
-      </div>
-      <div
-        className={cn(
-          "ml-auto opacity-0 border-2 border-green-800 h-full transition-all",
-          isActive && "opacity-100"
-        )}
-      />
-    </button>
-  )
-}
+    </>
+  );
+  
+};

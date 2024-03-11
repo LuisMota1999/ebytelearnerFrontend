@@ -102,7 +102,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="col-span-6 lg:col-span-2 ">
-            <div className="flex flex-col">
+            <div className="flex flex-col h-full">
               <Card className="shadow-sm flex-grow">
                 <CardHeader className="flex flex-row items-center justify-between ">
                   <CardTitle className="text-xl font-bold">
