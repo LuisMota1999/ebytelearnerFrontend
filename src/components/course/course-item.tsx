@@ -43,7 +43,7 @@ const CourseItem: React.FC<CourseItemProps> = ({
           CourseTeacher={CourseTeacher}
         />
       </div>
-      <div className="ml-auto mr-4 font-medium ">
+      <div className="ml-auto mr-4 font-medium cursor-pointer rounded-full hover:bg-gray-100">
         <IoIosArrowForward />
       </div>
     </div>

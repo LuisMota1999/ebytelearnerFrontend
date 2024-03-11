@@ -20,7 +20,7 @@ const sharedRoutes = [
     label: "My Courses",
     href: "/courses",
   },
-]
+];
 
 const teacherRoutes = [
   {
@@ -38,14 +38,26 @@ const teacherRoutes = [
     label: "Calendar",
     href: "/calendar",
   },
-]
+];
 
 export const SidebarRoutes = () => {
   const session = useSession();
 
-  const routesRoleBased = session.data?.Role == ("Admin" || "Teacher") ? teacherRoutes : sharedRoutes;
+  // Combine sharedRoutes and teacherRoutes and remove duplicates
+  const allRoutes = [
+    ...sharedRoutes,
+    ...teacherRoutes.filter(
+      (teacherRoute) =>
+        !sharedRoutes.some((sharedRoute) => sharedRoute.href === teacherRoute.href)
+    ),
+  ];
 
-  
+  // If the user is Admin or Teacher, show all routes, otherwise show only sharedRoutes
+  const routesRoleBased =
+    session.data?.Role === "Admin" || session.data?.Role === "Teacher"
+      ? allRoutes
+      : sharedRoutes;
+
   return (
     <div className="flex flex-col w-full">
       {routesRoleBased.map((route) => (
@@ -57,5 +69,5 @@ export const SidebarRoutes = () => {
         />
       ))}
     </div>
-  )
-}
+  );
+};

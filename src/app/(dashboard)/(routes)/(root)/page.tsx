@@ -19,6 +19,7 @@ import StatementChart from "@/components/chart/StatementChart";
 import { DailyAmount } from "@/components/chart/types";
 import RecentNews from "./_components/recent-news";
 import Loading from "./loading";
+import { RecentSessions } from "./_components/recent-sessions";
 
 export default function HomePage() {
   const { data: session } = useSession();
@@ -165,7 +166,7 @@ export default function HomePage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="overflow-y-auto">
-                  <RecentCourses />
+                  <RecentSessions />
                 </CardContent>
               </Card>
             </div>
