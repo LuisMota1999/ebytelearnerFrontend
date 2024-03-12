@@ -26,9 +26,7 @@ const AccordionSidebarComponent: React.FC<AccordionComponentProps> = ({
   const router = useRouter();
   const [activeChild, setActiveChild] = useState<number | null>(null);
 
-  const onClick = (hrefChildren: string, index: number) => () => {
-    // Define onClick as a function that returns a function
-    console.log(index);
+  const onClick = (hrefChildren: string, index: number) => () => {    
     router.push(hrefChildren);
     setActiveChild(index == activeChild ? null : index);
   };
@@ -59,10 +57,10 @@ const AccordionSidebarComponent: React.FC<AccordionComponentProps> = ({
               <ButtonSidebarComponent
                 key={index}
                 label={child.label || ""}
-                onClick={() => onClick(child.href ? child.href : "", index)}
+                onClick={onClick(child.href ? child.href : "", index)}
                 isActive={index === activeChild}
                 Icon={child.icon}
-                className="px-2"
+                className="px-4 text-sm"
               />
             ))}
           </div>

@@ -1,64 +1,27 @@
 import CourseCard from "@/components/course/course-card";
 import NoResults from "@/components/ui/no-results";
-import { useSession } from "next-auth/react";
-import { Suspense, useEffect, useState } from "react";
-import Loading from "../ui/loading";
+import { Suspense} from "react";
+import Loading from "@/components/ui/loading";
+import { Course } from "@/types/types";
 
-interface Course {
-  Id: string;
-  CourseName: string;
-  CourseDescription: string;
-  CoursePrice: number;
+interface Props {
+  courses: Course[]; // Define the type of the courses prop
 }
 
-export default function CoursesList() {
-  const { data: session } = useSession();
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [error, setError] = useState<string | null>(null);
+export default function CoursesList({ courses }: Props) { // Destructure courses from props
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const returnRowsParam = session?.AccessToken
-          ? `?returnRows=${100}`
-          : "";
-        const response = await fetch(
-          `http://localhost:5033/Course/All${returnRowsParam}`,
-          {
-            method: "GET",
-            headers: {
-              Accept: "*/*",
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${session?.AccessToken}`,
-            },
-          }
-        );
-
-        const data = await response.json();
-
-        setCourses(data);
-      } catch (error) {
-        setError(`Error fetching data. Please try again later. Error description: ${error}`, );
-      }
-    };
-
-    if (session?.AccessToken) {
-      fetchCourses();
-    }
-  }, [session?.AccessToken]);
-
-  if (error) {
-    console.log(error);
-  }
   return (
     <Suspense fallback={<Loading interval={70} />}>
       {courses.length === 0 && <NoResults />}
-      <div className="space-y-4">      
+      <div className="space-y-4">
+        
         <div className="grid gap-4 grid-cols-6">
           {courses.map((item, index) => (
-            <div className="col-span-6  md:col-span-3 lg:col-span-2">
+            <div
+              className="col-span-6  md:col-span-3 lg:col-span-2"
+              key={index}
+            >
               <CourseCard
-                key={index}
                 CourseName={item.CourseName}
                 CoursePrice={item.CoursePrice}
                 CourseDescription={item.CourseDescription}

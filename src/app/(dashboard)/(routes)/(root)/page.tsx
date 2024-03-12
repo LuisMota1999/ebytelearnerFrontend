@@ -80,13 +80,13 @@ export default function HomePage() {
                 <div className="md:w-1/2 flex justify-center items-center md:pt-6">
                   {/* Content for the larger column */}
                   <CardContent className="flex justify-center">
-                    <Image
+                  <Image
                       height={250}
                       width={250}
                       alt="teacher"
-                      src="teacherDashboard.svg"
+                      src="/assets/teacherDashboard.png"
                       className="self-center"
-                      loading="lazy"
+                      
                     />
                     <Image
                       height={75}

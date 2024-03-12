@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart, Calendar, Compass, Layout, List, SquarePen } from "lucide-react";
+import { BarChart, Calendar, Compass, GraduationCap, Layout, List, SquarePen } from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
 import { useSession } from "next-auth/react";
 
@@ -18,14 +18,14 @@ const sharedRoutes = [
     children: [],
   },
   {
-    icon: List,
+    icon: GraduationCap,
     label: "My Courses",
     href: "/courses",
     children: [
       {
-        icon: SquarePen,
-        label: "Create",
-        href: "/courses/create",
+        icon: List,
+        label: "List",
+        href: "/courses",
       },
       {
         icon: SquarePen,
@@ -38,14 +38,14 @@ const sharedRoutes = [
 
 const teacherRoutes = [
   {
-    icon: List,
+    icon: GraduationCap,
     label: "Courses",
     href: "/courses",
     children: [
       {
-        icon: SquarePen,
-        label: "Create",
-        href: "/courses/create",
+        icon: List,
+        label: "List",
+        href: "/courses",
       },
       {
         icon: SquarePen,
@@ -57,13 +57,13 @@ const teacherRoutes = [
   {
     icon: BarChart,
     label: "Analytics",
-    href: "/analytics",
+    href: "/teacher/analytics",
     children: [],
   },
   {
     icon: Calendar,
     label: "Calendar",
-    href: "/calendar",
+    href: "/teacher/calendar",
     children: [],
   },
 ];
