@@ -11,12 +11,7 @@ const sharedRoutes = [
     href: "/",
     children: [],
   },
-  {
-    icon: Compass,
-    label: "Browse",
-    href: "/search",
-    children: [],
-  },
+  
   {
     icon: GraduationCap,
     label: "My Courses",
@@ -36,7 +31,7 @@ const sharedRoutes = [
   },
 ];
 
-const teacherRoutes = [
+const privilegedRoutes = [
   {
     icon: GraduationCap,
     label: "Courses",
@@ -74,17 +69,17 @@ export const SidebarRoutes = () => {
   // Combine sharedRoutes and teacherRoutes and remove duplicates
   const allRoutes = [
     ...sharedRoutes,
-    ...teacherRoutes.filter(
-      (teacherRoute) =>
+    ...privilegedRoutes.filter(
+      (privilegedRoute) =>
         !sharedRoutes.some(
-          (sharedRoute) => sharedRoute.href === teacherRoute.href
+          (sharedRoute) => sharedRoute.href === privilegedRoute.href
         )
     ),
   ];
 
   // If the user is Admin or Teacher, show all routes, otherwise show only sharedRoutes
   const routesRoleBased =
-    session.data?.Role === "Admin" || session.data?.Role === "Teacher"
+    (session.data?.Role === "Admin" || session.data?.Role === "Teacher")
       ? allRoutes
       : sharedRoutes;
 

@@ -5,7 +5,7 @@ export default withAuth(
   function middleware(req) {
     
 
-    if (req.nextUrl.pathname.startsWith("/teacher") && (req.nextauth.token?.user.Role !== "Admin" || req.nextauth.token?.role !== "Teacher") )
+    if (req.nextUrl.pathname.startsWith("/teacher") && (req.nextauth.token?.user.Role !== "Admin" && req.nextauth.token?.role !== "Teacher") )
       {
         return NextResponse.rewrite(
           new URL("/sign-in?message=You Are Not Authorized!", req.url)

@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/popover";
 import { Country } from "@/types/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Link from "next/link";
 
 export const NavbarRoutes = () => {
   const [open, setOpen] = React.useState(false);
@@ -91,7 +92,7 @@ export const NavbarRoutes = () => {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                Profile
+                <Link href="/profile">Profile</Link>
                 <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuItem>
@@ -99,7 +100,7 @@ export const NavbarRoutes = () => {
                 <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                Settings
+                <Link href="/settings">Settings</Link>
                 <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
               </DropdownMenuItem>
             </DropdownMenuGroup>
