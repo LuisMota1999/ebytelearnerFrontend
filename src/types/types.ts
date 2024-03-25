@@ -38,10 +38,38 @@ export interface RecentNews {
 
 
 export interface Course {
-  Id: string;
-  CourseName: string;
-  CourseDescription: string;
-  CoursePrice: number;
+  Id: string
+  CourseName: string
+  CourseDescription: string
+  CoursePrice: number
+  CourseCategory: CourseCategory
+  CourseModules: CourseModule[]
+  CourseTeacher: User
+  IsPublished: any
+}
+
+export interface CourseCategory {
+  Id: string
+  CategoryName: string
+}
+
+export interface CourseModule {
+  Id: string
+  ModuleName: string
+}
+
+export interface User {
+  Id: string
+  Username: string
+  Email: string
+  PhoneNumber: any
+  ZipCode: any
+  NIF: any
+  Docn: any
+  Gender: any
+  Nationality: any
+  Active: boolean
+  Birthday: any
 }
 
 export interface Country {
