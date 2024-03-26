@@ -22,6 +22,7 @@ export default function CoursesList({ courses }: Props) { // Destructure courses
               key={index}
             >
               <CourseCard
+                CourseId = {item.Id}
                 CourseName={item.CourseName}
                 CoursePrice={item.CoursePrice}
                 CourseDescription={item.CourseDescription}

@@ -9,6 +9,7 @@ import IconButton  from "@/components/ui/icon-button";
 import CourseCardDetails from "./course-detail-item";
 
 interface CourseProps {
+  CourseId: string;
   CourseName: string;
   CourseDescription: string;
   CoursePrice: number;
@@ -17,11 +18,11 @@ interface CourseProps {
 
 
 
-const CourseCard: React.FC<CourseProps> = ({CourseName, CourseDescription, CoursePrice, CourseImage}) => {
+const CourseCard: React.FC<CourseProps> = ({CourseId, CourseName, CourseDescription, CoursePrice, CourseImage}) => {
 
   const router = useRouter();
   return ( 
-    <div onClick={() => {}} className="bg-white group cursor-pointer rounded-xl border p-3 space-y-4">
+    <div onClick={() => {router.push(`courses/${CourseId}`)}} className="bg-white group cursor-pointer rounded-xl border p-3 space-y-4">
       {/* Image & actions */}
       <div className="aspect-video rounded-xl bg-gray-100 relative">
         <Image 
@@ -46,7 +47,7 @@ const CourseCard: React.FC<CourseProps> = ({CourseName, CourseDescription, Cours
       {/* Description */}
       <div>
         <p className="font-semibold text-lg">{CourseName}</p>
-        <p className="text-sm text-gray-500">{CourseDescription}</p>
+        <p className="text-sm text-gray-500 line-clamp-3">{CourseDescription}</p>
       </div>
       <CourseCardDetails
           CourseEstimatedTime={2}

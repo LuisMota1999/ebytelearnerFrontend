@@ -50,22 +50,22 @@ export const NavbarRoutes = () => {
 
   const [flagData, setFlagData] = useState<Country[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `https://countriesnow.space/api/v0.1/countries/flag/images`,
-          { cache: "force-cache" }
-        );
-        const data = await response.json();
-        setFlagData(data.data as Country[]);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `https://countriesnow.space/api/v0.1/countries/flag/images`,
+  //         { cache: "force-cache" }
+  //       );
+  //       const data = await response.json();
+  //       setFlagData(data.data as Country[]);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   return (
     <div className="w-full flex flex-row-reverse">

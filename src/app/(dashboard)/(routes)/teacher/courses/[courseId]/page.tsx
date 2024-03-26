@@ -1,7 +1,7 @@
 "use client";
 import { IconBadge } from "@/components/icon-badge";
 import { Course, CourseCategory } from "@/types/types";
-import { CircleDollarSign, LayoutDashboard } from "lucide-react";
+import { CircleDollarSign, LayoutDashboard, ListChecks } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { PriceForm } from "./_components/price-form";
@@ -11,12 +11,12 @@ import { Banner } from "@/components/banner";
 import { CategoryForm } from "./_components/category-form";
 import { ImageForm } from "./_components/image-form";
 import { Actions } from "./_components/actions";
+import { ChaptersForm } from "./_components/chapters-form";
 
-
-async function fetchCourseData(session: any) {
+async function fetchCourseData(session: any, courseId: string) {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/08dc4a03-b5f0-4e0f-844f-1f2409de3904`,
+      `${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/${courseId}`,
       {
         method: "GET",
         headers: {
@@ -27,9 +27,8 @@ async function fetchCourseData(session: any) {
       }
     );
     if (response.ok) {
-      
       const responseBody = await response.json();
-      
+
       return responseBody;
     } else {
       throw new Error("Failed to fetch course data");
@@ -78,7 +77,7 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
       try {
         const [categoryData, courseData] = await Promise.all([
           fetchCategoryData(session),
-          fetchCourseData(session),
+          fetchCourseData(session, params.courseId),
         ]);
         setCategory(categoryData);
         setCourse(courseData);
@@ -142,14 +141,8 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
               <h2 className="text-xl">Customize your course</h2>
             </div>
             <TitleForm initialData={course!} courseId={course!?.Id} />
-            <DescriptionForm
-              initialData={course!}
-              courseId={course!?.Id}
-            />
-             <ImageForm
-              initialData={course!}
-              courseId={course!?.Id}
-            />
+            <DescriptionForm initialData={course!} courseId={course!?.Id} />
+            <ImageForm initialData={course!} courseId={course!?.Id} />
             <CategoryForm
               initialData={course!}
               courseId={course!?.Id}
@@ -162,14 +155,16 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
           <div className="space-y-6">
             <div>
               <div className="flex items-center gap-x-2">
-                <IconBadge icon={CircleDollarSign} />
-                <h2 className="text-xl">Sell your course</h2>
+                <IconBadge icon={ListChecks} />
+                <h2 className="text-xl">Course chapters</h2>
               </div>
-              <PriceForm
-                initialData={course!}
-                courseId={course!?.Id}
-              />
+              <ChaptersForm initialData={course!} courseId={course!?.Id} />
             </div>
+            <div className="flex items-center gap-x-2">
+              <IconBadge icon={CircleDollarSign} />
+              <h2 className="text-xl">Sell your course</h2>
+            </div>
+            <PriceForm initialData={course!} courseId={course!?.Id} />
           </div>
         </div>
       </div>

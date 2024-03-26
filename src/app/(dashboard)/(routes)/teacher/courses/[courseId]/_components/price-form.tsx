@@ -38,7 +38,7 @@ export const PriceForm = ({
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
-
+console.log(initialData);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({

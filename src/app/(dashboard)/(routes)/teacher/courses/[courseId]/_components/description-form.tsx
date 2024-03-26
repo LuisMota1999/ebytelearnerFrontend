@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Course } from "@/types/types";
+import { useSession } from "next-auth/react";
 
 interface DescriptionFormProps {
   initialData: Course;
@@ -37,7 +38,7 @@ export const DescriptionForm = ({
   courseId
 }: DescriptionFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
-
+  const { data: session } = useSession();
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const router = useRouter();
@@ -53,10 +54,20 @@ export const DescriptionForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, values);
+      
+      await fetch(`${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/Update/${courseId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.AccessToken}`,
+        },
+        body: JSON.stringify({
+          courseDescription: values.description,
+        }),
+      });
       toast.success("Course updated");
       toggleEdit();
-      router.refresh();
+      
     } catch {
       toast.error("Something went wrong");
     }

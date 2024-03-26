@@ -47,7 +47,7 @@ export const CategoryForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      categoryId: initialData?.CourseCategory.Id || ""
+      categoryId: initialData?.CourseCategory?.Id || ""
     },
   });
 
@@ -64,7 +64,7 @@ export const CategoryForm = ({
     }
   }
 
-  const selectedOption = options!.find((option) => option.value === initialData?.CourseCategory.Id);
+  const selectedOption = options!.find((option) => option.value === initialData?.CourseCategory?.Id);
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
@@ -84,7 +84,7 @@ export const CategoryForm = ({
       {!isEditing && (
         <p className={cn(
           "text-sm mt-2",
-          !initialData?.CourseCategory.Id && "text-slate-500 italic"
+          !initialData?.CourseCategory?.Id && "text-slate-500 italic"
         )}>
           {selectedOption?.label || "No category"}
         </p>
