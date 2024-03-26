@@ -2,7 +2,8 @@
 
 import { BarChart, Calendar, Compass, GraduationCap, Layout, List, SquarePen } from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
-import { useSession } from "next-auth/react";
+import { useSession, getSession } from "next-auth/react";
+import { Session } from "next-auth/core/types";
 
 const sharedRoutes = [
   {
@@ -10,24 +11,6 @@ const sharedRoutes = [
     label: "Dashboard",
     href: "/",
     children: [],
-  },
-  
-  {
-    icon: GraduationCap,
-    label: "My Courses",
-    href: "/courses",
-    children: [
-      {
-        icon: List,
-        label: "List",
-        href: "/courses",
-      },
-      {
-        icon: SquarePen,
-        label: "Create",
-        href: "/courses/create",
-      },
-    ],
   },
 ];
 
@@ -40,7 +23,7 @@ const privilegedRoutes = [
       {
         icon: List,
         label: "List",
-        href: "/courses",
+        href: "/teacher/courses",
       },
       {
         icon: SquarePen,
@@ -63,10 +46,8 @@ const privilegedRoutes = [
   },
 ];
 
-export const SidebarRoutes = () => {
-  const session = useSession();
-
-  // Combine sharedRoutes and teacherRoutes and remove duplicates
+export const SidebarRoutes: React.FC<{ session: Session }> = ({ session }) => {
+  // Now you can directly use the session prop without waiting for it asynchronously
   const allRoutes = [
     ...sharedRoutes,
     ...privilegedRoutes.filter(
@@ -77,9 +58,8 @@ export const SidebarRoutes = () => {
     ),
   ];
 
-  // If the user is Admin or Teacher, show all routes, otherwise show only sharedRoutes
   const routesRoleBased =
-    (session.data?.Role === "Admin" || session.data?.Role === "Teacher")
+    session?.Role === "Admin" || session?.Role === "Teacher"
       ? allRoutes
       : sharedRoutes;
 
@@ -97,3 +77,4 @@ export const SidebarRoutes = () => {
     </div>
   );
 };
+

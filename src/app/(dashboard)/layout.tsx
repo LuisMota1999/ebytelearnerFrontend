@@ -4,7 +4,6 @@ import { getServerSession } from "next-auth";
 import { ReactNode, Suspense } from "react";
 import { redirect } from "next/navigation";
 import { nextAuthOptions } from "../api/auth/[...nextauth]/route";
-import { useSession } from "next-auth/react";
 
 
 interface PrivateLayoutProps {
@@ -27,7 +26,7 @@ export default async function DashboardLayout({
         <Navbar />
       </div>
       <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50">
-        <Sidebar />
+        <Sidebar session={session}/>
       </div>
       <main className="md:pl-56 h-full pt-[80px]">{children}</main>
     </div>

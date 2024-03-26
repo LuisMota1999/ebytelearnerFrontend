@@ -42,6 +42,7 @@ export interface Course {
   CourseName: string
   CourseDescription: string
   CoursePrice: number
+  CourseImageURL: string
   CourseCategory: CourseCategory
   CourseModules: CourseModule[]
   CourseTeacher: User

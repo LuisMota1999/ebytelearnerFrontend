@@ -16,7 +16,7 @@ const fetcher = async (url: string) => {
 
 export default function RecentNews() {
   const { data: session } = useSession();
-  const { data: articles, error, isLoading } = useSWR(
+  const { data: articles, error } = useSWR(
     session?.AccessToken
       ? `https://newsapi.org/v2/top-headlines?pageSize=5&country=us&category=technology&sortBy=popularity&apiKey=${process.env.NEXT_PUBLIC_NEWS_API_KEY}`
       : null,
@@ -24,10 +24,11 @@ export default function RecentNews() {
   );
 
   if (error) {
-    console.log(error);
+    console.error('Error fetching recent news:', error);
+    return <div>Error fetching recent news. Please try again later.</div>;
   }
-  
-  if (isLoading) {
+
+  if (!articles) {
     return (
       <div className="flex justify-center items-center h-48">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
@@ -37,22 +38,21 @@ export default function RecentNews() {
 
   return (
     <div>
-      {articles && articles.totalResults === 0 ? (
+      {articles.totalResults === 0 ? (
         <NoResults />
       ) : (
         <div className="space-y-8 max-h-[13rem] 2xl:max-h-[20rem] overflow-y-auto">
-          {articles &&
-            articles.articles.map((item, index) => (
-              <ArticleItem
-                key={index}
-                ArticleTitle={item.title}
-                ArticleDescription={item.description}
-                ArticleUrl={item.url}
-                ArticleUrlImage={item.urlToImage}
-                ArticleAuthor={item.author}
-                ArticlePublishedAt={item.publishedAt}
-              />
-            ))}
+          {articles.articles.map((item, index) => (
+            <ArticleItem
+              key={index}
+              ArticleTitle={item.title}
+              ArticleDescription={item.description}
+              ArticleUrl={item.url}
+              ArticleUrlImage={item.urlToImage}
+              ArticleAuthor={item.author}
+              ArticlePublishedAt={item.publishedAt}
+            />
+          ))}
         </div>
       )}
     </div>

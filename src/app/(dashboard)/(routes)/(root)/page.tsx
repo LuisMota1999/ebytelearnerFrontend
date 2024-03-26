@@ -17,9 +17,10 @@ import { ImNewspaper } from "react-icons/im";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import StatementChart from "@/components/chart/StatementChart";
 import { DailyAmount } from "@/components/chart/types";
-import RecentNews from "./_components/recent-news";
+
 import Loading from "./loading";
 import { RecentSessions } from "./_components/recent-sessions";
+import RecentNews  from "./_components/recent-news";
 
 export default function HomePage() {
   const { data: session } = useSession();
