@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { formatPrice } from "@/lib/format";
 import { Course } from "@/types/types";
+import { useSession } from "next-auth/react";
 
 interface PriceFormProps {
   initialData: Course;
@@ -36,10 +37,10 @@ export const PriceForm = ({
   courseId
 }: PriceFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
-
+  const { data: session } = useSession();
   const toggleEdit = () => setIsEditing((current) => !current);
-console.log(initialData);
-  const router = useRouter();
+  const [course, setCourse] = useState<Course>(initialData);
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,15 +52,33 @@ console.log(initialData);
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    
     try {
-      await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course updated");
-      toggleEdit();
-      router.refresh();
-    } catch {
-      toast.error("Something went wrong");
-    }
+      setIsEditing(true); // Set loading state to true before fetch
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/Update/${courseId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.AccessToken}`,
+        },
+        body: JSON.stringify({
+          coursePrice: values.price,
+        }),
+      });
+      if (response.ok) {
+        const updatedCourse: Course = await response.json();
+        
+        setCourse(updatedCourse);
+        toast.success("Course price updated with success!");
+        toggleEdit();
+      } else {
+        throw new Error("Failed to create module");
+      } 
+  } catch {
+    toast.error("Something went wrong");
   }
+}
+
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
@@ -79,10 +98,10 @@ console.log(initialData);
       {!isEditing && (
         <p className={cn(
           "text-sm mt-2",
-          !initialData?.CoursePrice && "text-slate-500 italic"
+          !course?.CoursePrice && "text-slate-500 italic"
         )}>
-          {initialData?.CoursePrice
-            ? formatPrice(initialData.CoursePrice)
+          {course?.CoursePrice
+            ? formatPrice(course.CoursePrice)
             : "No price"
           }
         </p>

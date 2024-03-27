@@ -1,14 +1,10 @@
 "use client";
 
 import * as z from "zod";
-import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-
 import {
   Form,
   FormControl,
@@ -21,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Course } from "@/types/types";
 import { useSession } from "next-auth/react";
-
+import toast from "react-hot-toast";
 interface DescriptionFormProps {
   initialData: Course;
   courseId: string;
@@ -40,9 +36,7 @@ export const DescriptionForm = ({
   const [isEditing, setIsEditing] = useState(false);
   const { data: session } = useSession();
   const toggleEdit = () => setIsEditing((current) => !current);
-
-  const router = useRouter();
-
+  const [course, setCourse] = useState<Course>(initialData); 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,21 +47,28 @@ export const DescriptionForm = ({
   const { isSubmitting, isValid } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      
-      await fetch(`${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/Update/${courseId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.AccessToken}`,
-        },
-        body: JSON.stringify({
-          courseDescription: values.description,
-        }),
-      });
-      toast.success("Course updated");
-      toggleEdit();
-      
+    
+      try {
+        setIsEditing(true); // Set loading state to true before fetch
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/Update/${courseId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.AccessToken}`,
+          },
+          body: JSON.stringify({
+            courseDescription: values.description,
+          }),
+        });
+        if (response.ok) {
+          const updatedCourse: Course = await response.json();
+          
+          setCourse(updatedCourse);
+          toast.success("Course description updated with success!");
+          toggleEdit();
+        } else {
+          throw new Error("Failed to create module");
+        } 
     } catch {
       toast.error("Something went wrong");
     }
@@ -91,9 +92,9 @@ export const DescriptionForm = ({
       {!isEditing && (
         <p className={cn(
           "text-sm mt-2",
-          !initialData?.CourseDescription && "text-slate-500 italic"
+          !course?.CourseDescription && "text-slate-500 italic"
         )}>
-          {initialData?.CourseDescription || "No description"}
+          {course?.CourseDescription || "No description"}
         </p>
       )}
       {isEditing && (
