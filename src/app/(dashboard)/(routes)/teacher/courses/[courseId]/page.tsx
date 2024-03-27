@@ -1,17 +1,23 @@
 "use client";
-import { IconBadge } from "@/components/icon-badge";
+import { IconBadge } from "@/components/ui/icon-badge";
 import { Course, CourseCategory } from "@/types/types";
-import { CircleDollarSign, LayoutDashboard, ListChecks } from "lucide-react";
+import {
+  CircleDollarSign,
+  File,
+  LayoutDashboard,
+  ListChecks,
+} from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { PriceForm } from "./_components/price-form";
 import { TitleForm } from "./_components/title-form";
 import { DescriptionForm } from "./_components/description-form";
-import { Banner } from "@/components/banner";
+import { Banner } from "@/components/ui/banner";
 import { CategoryForm } from "./_components/category-form";
 import { ImageForm } from "./_components/image-form";
 import { Actions } from "./_components/actions";
 import { ChaptersForm } from "./_components/chapters-form";
+import { AttachmentForm } from "./_components/attachment-form";
 
 async function fetchCourseData(session: any, courseId: string) {
   try {
@@ -160,11 +166,20 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
               </div>
               <ChaptersForm initialData={course!} courseId={course!?.Id} />
             </div>
-            <div className="flex items-center gap-x-2">
-              <IconBadge icon={CircleDollarSign} />
-              <h2 className="text-xl">Sell your course</h2>
+            <div>
+              <div className="flex items-center gap-x-2">
+                <IconBadge icon={CircleDollarSign} />
+                <h2 className="text-xl">Sell your course</h2>
+              </div>
+              <PriceForm initialData={course!} courseId={course!?.Id} />
             </div>
-            <PriceForm initialData={course!} courseId={course!?.Id} />
+            <div>
+              <div className="flex items-center gap-x-2">
+                <IconBadge icon={File} />
+                <h2 className="text-xl">Resources & Attachments</h2>
+              </div>
+              <AttachmentForm initialData={course!} courseId={course!?.Id} />
+            </div>
           </div>
         </div>
       </div>
