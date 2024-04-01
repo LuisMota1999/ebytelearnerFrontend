@@ -13,7 +13,7 @@ const CourseCardDetails: React.FC<CourseDetailProps> = ({
     CourseTeacher
 }) => {
   return (
-    <div className="w-full flex flex-row justify-between ">
+    <div className="w-full flex flex-row justify-between mt-4">
       
       <span className="text-xs md:text-sm text-muted-foreground flex flex-row">
         <GiBlackBook size={17} className="mt-[0.1rem]" />

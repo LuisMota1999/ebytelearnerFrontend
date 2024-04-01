@@ -57,6 +57,9 @@ export interface CourseCategory {
 export interface CourseModule {
   Id: string
   ModuleName: string
+  ModuleDescription: string
+  IsFree: any
+  IsPublished: any
 }
 
 export interface User {

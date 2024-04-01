@@ -93,6 +93,7 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
     //   });
     //   toast.success("Chapters reordered");
     //   router.refresh();
+    console.log(updateData);
     } catch {
       toast.error("Something went wrong");
     } finally {

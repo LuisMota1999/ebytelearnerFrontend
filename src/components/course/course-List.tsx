@@ -18,7 +18,7 @@ export default function CoursesList({ courses }: Props) { // Destructure courses
         <div className="grid gap-4 grid-cols-6">
           {courses.map((item, index) => (
             <div
-              className="col-span-6  md:col-span-3 lg:col-span-2"
+              className="col-span-6 md:col-span-3 lg:col-span-2 flex"
               key={index}
             >
               <CourseCard
@@ -26,7 +26,9 @@ export default function CoursesList({ courses }: Props) { // Destructure courses
                 CourseName={item.CourseName}
                 CoursePrice={item.CoursePrice}
                 CourseDescription={item.CourseDescription}
-                CourseImage="https://images.unsplash.com/1/work-station-straight-on-view.jpg"
+                CourseChapters={item.CourseModules.length}
+                CourseTeacher={item.CourseTeacher?.Username}
+                CourseImage={`https://lh3.googleusercontent.com/d/${item?.CourseImageURL}?authuser=1/view`}
               />
             </div>
           ))}
