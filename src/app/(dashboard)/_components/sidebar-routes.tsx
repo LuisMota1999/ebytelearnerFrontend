@@ -1,8 +1,7 @@
 "use client";
 
-import { BarChart, Calendar, Compass, GraduationCap, Layout, List, SquarePen } from "lucide-react";
+import { BarChart, Calendar, Compass, GraduationCap, Layout, List, ShieldCheck, SquarePen } from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
-import { useSession, getSession } from "next-auth/react";
 import { Session } from "next-auth/core/types";
 
 const sharedRoutes = [
@@ -26,10 +25,15 @@ const privilegedRoutes = [
         href: "/teacher/courses",
       },
       {
-        icon: SquarePen,
-        label: "Create",
-        href: "/courses/create",
+        icon: Calendar,
+        label: "Calendar",
+        href: "/teacher/calendar",
       },
+      {
+        icon: ShieldCheck,
+        label: "Grades",
+        href: ""
+      }
     ],
   },
   {
@@ -38,12 +42,7 @@ const privilegedRoutes = [
     href: "/teacher/analytics",
     children: [],
   },
-  {
-    icon: Calendar,
-    label: "Calendar",
-    href: "/teacher/calendar",
-    children: [],
-  },
+  
 ];
 
 export const SidebarRoutes: React.FC<{ session: Session }> = ({ session }) => {

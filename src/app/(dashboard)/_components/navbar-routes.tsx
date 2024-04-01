@@ -158,7 +158,6 @@ export const NavbarRoutes = () => {
                       value={flagData.name}
                       onSelect={(currentValue) => {
                         setValue(currentValue === value ? "" : currentValue);
-                        //setFlag(currentValue === value ? "" : flagData.flag);
                         setOpen(false);
                       }}
                     >

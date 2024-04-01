@@ -20,6 +20,7 @@ import { Actions } from "./_components/actions";
 import { ChaptersForm } from "./_components/chapters-form";
 import { AttachmentForm } from "./_components/attachment-form";
 import { TeacherForm } from "./_components/teacher-form";
+import { CourseAccessForm } from "./_components/course-access-form";
 
 async function fetchCourseData(session: any, courseId: string) {
   try {
@@ -182,13 +183,21 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
             <DescriptionForm initialData={course!} courseId={course!?.Id} />
             <ImageForm initialData={course!} courseId={course!?.Id} />
             <CategoryForm
-                initialData={course!}
-                courseId={course!?.Id}
-                options={category!?.map((c) => ({
-                  label: c.CategoryName,
-                  value: c.Id,
-                }))}
-              />
+              initialData={course!}
+              courseId={course!?.Id}
+              options={category!?.map((c) => ({
+                label: c.CategoryName,
+                value: c.Id,
+              }))}
+            />
+            <TeacherForm
+              initialData={course!}
+              courseId={course!?.Id}
+              options={teacher!?.map((c) => ({
+                label: c.Username,
+                value: c.Id,
+              }))}
+            />
           </div>
           <div className="space-y-6">
             <div>
@@ -217,15 +226,8 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
                 <IconBadge icon={Settings} />
                 <h2 className="text-xl">Course Settings</h2>
               </div>
-              
-              <TeacherForm
-                initialData={course!}
-                courseId={course!?.Id}
-                options={teacher!?.map((c) => ({
-                  label: c.Username,
-                  value: c.Id,
-                }))}
-              />
+
+              <CourseAccessForm initialData={course!} courseId={course!?.Id} />
             </div>
           </div>
         </div>
