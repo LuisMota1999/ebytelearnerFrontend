@@ -5,8 +5,14 @@ import { Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-import { DataTableViewOptions } from "./data-table-view-options";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -20,6 +26,23 @@ export function DataTableToolbar<TData>({
   return (
     <div className="flex flex-col items-center">
       <div className="flex flex-1 items-center space-x-2 w-full">
+        <Select>
+          <SelectTrigger className="w-full outline-none">
+            <SelectValue placeholder="Columns" />
+          </SelectTrigger>
+          <SelectContent>
+            {table.getAllLeafColumns().map((column) => {
+              return (
+                <div key={column.id} className="px-1">
+                  <SelectItem key={column.id} value={column.id}>
+                  {column.id}
+                  </SelectItem>
+                </div>
+              );
+            })}
+          </SelectContent>
+        </Select>
+
         <Input
           placeholder="Filter courses.."
           className="max-w-sm outline-none text-sm flex-1 "

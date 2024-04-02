@@ -1,7 +1,10 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react";
+import {
+  MoreHorizontal,
+  Pencil,
+} from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -14,19 +17,19 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Course } from "@/types/types";
+import HeaderWithDropdown from "./data-table-header";
 
 export const columns: ColumnDef<Course>[] = [
   {
     accessorKey: "CourseName",
     header: ({ column }) => {
+     
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <HeaderWithDropdown
+          columnName="Name"
+          
+          onClick={(state:boolean) => column.toggleSorting(state)}
+        />
       );
     },
   },
@@ -34,13 +37,10 @@ export const columns: ColumnDef<Course>[] = [
     accessorKey: "CoursePrice",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Price
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <HeaderWithDropdown
+          columnName="Price"
+          onClick={(state:boolean) => column.toggleSorting(state)}
+        />
       );
     },
     cell: ({ row }) => {
@@ -57,13 +57,10 @@ export const columns: ColumnDef<Course>[] = [
     accessorKey: "IsPublished",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Published
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <HeaderWithDropdown
+          columnName="Published"
+          onClick={(state:boolean) => column.toggleSorting(state)}
+        />
       );
     },
     cell: ({ row }) => {
@@ -71,9 +68,7 @@ export const columns: ColumnDef<Course>[] = [
 
       return (
         <div className="px-6">
-          <Badge
-            className={cn("bg-slate-500", isPublished && "bg-sky-700")}
-          >
+          <Badge className={cn("bg-slate-500", isPublished && "bg-sky-700")}>
             {isPublished ? "Published" : "Draft"}
           </Badge>
         </div>
@@ -87,7 +82,7 @@ export const columns: ColumnDef<Course>[] = [
 
       return (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild className="outline-none">
             <Button variant="ghost" className="h-4 w-8 p-0">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />

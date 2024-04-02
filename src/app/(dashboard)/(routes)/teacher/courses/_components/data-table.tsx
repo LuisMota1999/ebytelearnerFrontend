@@ -1,5 +1,4 @@
 "use client";
-import { RedirectType, redirect } from "next/navigation";
 import * as React from "react";
 import {
   ColumnDef,
@@ -52,6 +51,7 @@ import { useState } from "react";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableViewOptions } from "./data-table-view-options";
+import { useRouter } from "next/navigation";
 const formSchema = z.object({
   courseName: z.string().min(3, {
     message: "Course Name must have at least 3 characters.",
@@ -73,6 +73,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -123,6 +124,8 @@ export function DataTable<TData, TValue>({
       );
 
       if (response.ok) {
+        const newCourse: Course = await response.json();
+        router.push(`/teacher/courses/${newCourse.Id}`);
         form.reset();
 
         setShowModal(false);
@@ -135,9 +138,6 @@ export function DataTable<TData, TValue>({
         throw new Error("Failed to create course");
       }
 
-      const newCourse: Course = await response.json();
-    
-      redirect(`/teacher/courses/${newCourse.Id}`, RedirectType.push);
     } catch (error) {
       toast({
         title: "Uh oh! Something went wrong.",
@@ -224,6 +224,7 @@ export function DataTable<TData, TValue>({
                               </FormMessage>{" "}
                               <FormControl>
                                 <Textarea
+                                  disabled={isSubmitting}
                                   placeholder="Tell us a little bit about the course"
                                   className="resize-none bg-slate-100 outline-none text-sm flex-1 border-none"
                                   {...field}
@@ -248,7 +249,7 @@ export function DataTable<TData, TValue>({
                               <FormControl>
                                 <Input
                                   disabled={isSubmitting}
-                                  placeholder="e.g 100.99"
+                                  placeholder="e.g 79.99"
                                   className="bg-slate-100 outline-none text-sm flex-1 border-none"
                                   type="number"
                                   {...field}
@@ -324,24 +325,6 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <DataTablePagination table={table} />
-      {/* <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div> */}
     </div>
   );
 }

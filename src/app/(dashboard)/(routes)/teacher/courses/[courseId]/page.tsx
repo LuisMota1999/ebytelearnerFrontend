@@ -226,7 +226,6 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
                 <IconBadge icon={Settings} />
                 <h2 className="text-xl">Course Settings</h2>
               </div>
-
               <CourseAccessForm initialData={course!} courseId={course!?.Id} />
             </div>
           </div>
