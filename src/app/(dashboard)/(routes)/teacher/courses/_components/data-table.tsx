@@ -149,7 +149,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex flex-row items-center py-4 justify-between">
+      <div className="flex flex-row items-center py-4 ">
         <div>
           <DataTableToolbar table={table} />
         </div>

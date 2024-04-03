@@ -18,6 +18,28 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 
+function splitOnCapitalizedLetters(str: string) {
+  const words = [];
+  let currentWord = '';
+
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    if (char === char.toUpperCase()) {
+      if (currentWord) {
+        words.push(currentWord);
+        currentWord = '';
+      }
+    }
+    currentWord += char;
+  }
+
+  if (currentWord) {
+    words.push(currentWord);
+  }
+
+  return words.join(' ');
+}
+
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
@@ -31,14 +53,8 @@ export function DataTableToolbar<TData>({
             <SelectValue placeholder="Columns" />
           </SelectTrigger>
           <SelectContent>
-            {table.getAllLeafColumns().map((column) => {
-              return (
-                <div key={column.id} className="px-1">
-                  <SelectItem key={column.id} value={column.id}>
-                  {column.id}
-                  </SelectItem>
-                </div>
-              );
+            {table.getAllLeafColumns().map((column, index) => {
+              return <SelectItem key={index} value={column.id}>{splitOnCapitalizedLetters(column.id)}</SelectItem>;
             })}
           </SelectContent>
         </Select>

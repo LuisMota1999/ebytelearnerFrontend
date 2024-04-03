@@ -1,10 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  MoreHorizontal,
-  Pencil,
-} from "lucide-react";
+import { MoreHorizontal, Pencil } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -23,13 +20,19 @@ export const columns: ColumnDef<Course>[] = [
   {
     accessorKey: "CourseName",
     header: ({ column }) => {
-     
       return (
         <HeaderWithDropdown
           columnName="Name"
-          
-          onClick={(state:boolean) => column.toggleSorting(state)}
+          onClick={(state: boolean) => column.toggleSorting(state)}
         />
+      );
+    },
+    cell: ({ row }) => {
+      const { Id } = row.original;
+      return (
+        <Link href={`/teacher/courses/${Id}`} className="hover:underline">
+            {row.getValue("CourseName")}
+        </Link>
       );
     },
   },
@@ -39,7 +42,7 @@ export const columns: ColumnDef<Course>[] = [
       return (
         <HeaderWithDropdown
           columnName="Price"
-          onClick={(state:boolean) => column.toggleSorting(state)}
+          onClick={(state: boolean) => column.toggleSorting(state)}
         />
       );
     },
@@ -59,7 +62,7 @@ export const columns: ColumnDef<Course>[] = [
       return (
         <HeaderWithDropdown
           columnName="Published"
-          onClick={(state:boolean) => column.toggleSorting(state)}
+          onClick={(state: boolean) => column.toggleSorting(state)}
         />
       );
     },
@@ -75,29 +78,29 @@ export const columns: ColumnDef<Course>[] = [
       );
     },
   },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const { Id } = row.original;
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => {
+  //     const { Id } = row.original;
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="outline-none">
-            <Button variant="ghost" className="h-4 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <Link href={`/teacher/courses/${Id}`}>
-              <DropdownMenuItem>
-                <Pencil className="h-4 w-4 mr-2" />
-                Edit
-              </DropdownMenuItem>
-            </Link>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
+  //     return (
+  //       <DropdownMenu>
+  //         <DropdownMenuTrigger asChild className="outline-none">
+  //           <Button variant="ghost" className="h-4 w-8 p-0">
+  //             <span className="sr-only">Open menu</span>
+  //             <MoreHorizontal className="h-4 w-4" />
+  //           </Button>
+  //         </DropdownMenuTrigger>
+  //         <DropdownMenuContent align="end">
+  //           <Link href={`/teacher/courses/${Id}`}>
+  //             <DropdownMenuItem>
+  //               <Pencil className="h-4 w-4 mr-2" />
+  //               Edit
+  //             </DropdownMenuItem>
+  //           </Link>
+  //         </DropdownMenuContent>
+  //       </DropdownMenu>
+  //     );
+  //   },
+  // },
 ];
