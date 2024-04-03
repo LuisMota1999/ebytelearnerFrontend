@@ -17,24 +17,32 @@ import { useState } from "react";
 
 interface HeaderWithDropdownProps {
   columnName: string;
-  onClick: (state: boolean) => void; // Void function property
+  onClick: (state: boolean) => void;
+  onVisible: (state: boolean) => void; // Void function property
 }
 
 const HeaderWithDropdown: React.FC<HeaderWithDropdownProps> = ({
   columnName,
   onClick,
+  onVisible
 }) => {
   const [isSortedAsc, setIsSortedAsc] = useState(false); // State to track ascending sort
+  const [isVisible, setIsVisible] = useState(false);
 
-  const handleButtonClick = () => {
+  const handleSortedClick = () => {
     onClick(isSortedAsc); // Call the onClick handler
     setIsSortedAsc((prev) => !prev); // Toggle the ascending sort state
+  };
+
+  const handleVisibleClick = () => {
+    onVisible(isVisible); // Call the onClick handler
+    setIsVisible((prev) => !prev); // Toggle the ascending sort state
   };
 
   return (
     <div className="relative">
       <div className="flex items-center">
-        <Button variant="ghost" onClick={handleButtonClick}>
+        <Button variant="ghost" onClick={handleSortedClick}>
           {columnName}
           {isSortedAsc ? (
             <ArrowUp className="h-4 w-4 ml-2" />
@@ -65,7 +73,9 @@ const HeaderWithDropdown: React.FC<HeaderWithDropdownProps> = ({
               Filter
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={handleVisibleClick}
+            >
               <EyeOffIcon className="h-4 w-4 mr-2" />
               Hide
             </DropdownMenuItem>

@@ -137,7 +137,6 @@ export function DataTable<TData, TValue>({
         // Handle error response from API
         throw new Error("Failed to create course");
       }
-
     } catch (error) {
       toast({
         title: "Uh oh! Something went wrong.",
@@ -149,12 +148,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex flex-row items-center py-4 ">
-        <div>
-          <DataTableToolbar table={table} />
-        </div>
-
-        <div className="w-full flex flex-row justify-between">
+      <div className="flex flex-row justify-between">
+        <h1 className="text-2xl font-medium gap-y-2 w-1/2">Courses List</h1>
+        <div className="w-1/2 flex flex-row justify-between">
           <div className="ml-auto mr-0 lg:mr-2">
             <Dialog open={showModal} onOpenChange={setShowModal}>
               <DialogTrigger asChild>
@@ -273,7 +269,9 @@ export function DataTable<TData, TValue>({
           </div>
         </div>
       </div>
-
+      <div className="gap-y-2">
+        <DataTableToolbar table={table} />
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -324,7 +322,9 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <div className="py-2">
+        <DataTablePagination table={table} />
+      </div>
     </div>
   );
 }

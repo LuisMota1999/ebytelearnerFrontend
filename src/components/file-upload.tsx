@@ -4,6 +4,7 @@ import React, { useState, ChangeEvent, useRef } from "react";
 import { FaCheck, FaCloudUploadAlt, FaTimes } from "react-icons/fa";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import { Input } from "./ui/input";
 
 interface FileUploaderProps {
   courseId: string;
@@ -14,12 +15,14 @@ interface FileUploaderProps {
   allowMultiple?: boolean;
   label?: string;
   labelAlt?: string;
+  fileLabel?: string;
 }
 
 export default function FileUploader(props: FileUploaderProps) {
   const {
     method = "",
     courseId = "",
+    fileLabel = "",
     acceptedFileTypes,
     url,
     maxFileSize = 5,
@@ -137,83 +140,96 @@ export default function FileUploader(props: FileUploaderProps) {
     setSelectedImage(null);
   };
   return (
-    <div className="flex flex-col gap-4 w-full h-60 md:h-48">
-      {uploadSuccess ? (
-        <div className="flex flex-col gap-2">
-          {isError ? (
-            <span className="text-xs text-red-500">
-              Upload completed, but with errors.
-            </span>
-          ) : (
-            <></>
-          )}
-          <div className="btn-group w-full">
-            <span className="btn btn-success w-1/2">Success!</span>
-            <button className="btn w-1/2" onClick={resetUploader}>
-              Upload Another
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="form-control w-full">
-          <label className="label">
-            <span className="label-text">{label}</span>
-            <span className="label-text-alt">{labelAlt}</span>
-          </label>
-          <label className="custom-file-input relative block overflow-hidden w-full h-48 text-center bg-gray-100 border-2 border-dashed border-gray-400 rounded-lg cursor-pointer">
-            <input
-              type="file"
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              onChange={fileSelectedHandler}
-              accept={
-                acceptedFileTypes ? acceptedFileTypes.join(",") : undefined
-              }
-              ref={fileInputRef}
-              multiple={allowMultiple}
-            />
-            <div className="icon flex mt-12 items-center justify-center text-gray-400">
-              <FaCloudUploadAlt size={80} className="hover:text-[#d7f4e7] text-[#00A76F]"/>
-            </div>
-            {selectedImage && (
-              <Image
-                src={URL.createObjectURL(selectedImage)}
-                fill
-                alt="Thumb"
-              />
+    <>
+      <div className="flex flex-col gap-4 w-full h-60 md:h-48">
+        {uploadSuccess ? (
+          <div className="flex flex-col gap-2">
+            {isError ? (
+              <span className="text-xs text-red-500">
+                Upload completed, but with errors.
+              </span>
+            ) : (
+              <></>
             )}
-          </label>
-          <label className="label">
-            <span className="label-text-alt text-red-500">{uploadError}</span>
-          </label>
-        </div>
-      )}
-
-      <div className="overflow-x-auto flex gap-2 flex-col-reverse">
-        {Object.entries(fileProgress).map(([fileName, progress]) => (
-          <div key={fileName} className="text-xs flex flex-col gap-1">
-            <p>{fileName}</p>
-            <div className="flex items-center gap-2">
-              <progress
-                className="progress progress-primary w-full"
-                value={progress}
-                max="100"
-              />
-              {progress === 100 && (
-                <>
-                  {fileStatus[fileName] === "Uploaded" ? (
-                    <FaCheck className="text-xl text-green-500 mr-4" />
-                  ) : (
-                    <FaTimes className="text-xl text-red-500 mr-4" />
-                  )}
-                </>
-              )}
+            <div className="btn-group w-full">
+              <span className="btn btn-success w-1/2">Success!</span>
+              <button className="btn w-1/2" onClick={resetUploader}>
+                Upload Another
+              </button>
             </div>
-            <p className="text-red-500">
-              {fileStatus[fileName] !== "Uploaded" ? fileStatus[fileName] : ""}
-            </p>
           </div>
-        ))}
+        ) : (
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">{label}</span>
+              <span className="label-text-alt">{labelAlt}</span>
+            </label>
+            <label className="custom-file-input relative block overflow-hidden w-full h-48 text-center bg-gray-100 border-2 border-dashed border-gray-400 rounded-lg cursor-pointer">
+              <Input
+                type="file"
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                onChange={fileSelectedHandler}
+                accept={
+                  acceptedFileTypes ? acceptedFileTypes.join(",") : undefined
+                }
+                ref={fileInputRef}
+                multiple={allowMultiple}
+              />
+              <div className="icon flex mt-12 items-center justify-center text-gray-400">
+                <FaCloudUploadAlt
+                  size={80}
+                  className="text-[#00A76F] hover:text-green-800"
+                />
+              </div>
+              {selectedImage && (
+                <Image
+                  src={URL.createObjectURL(selectedImage)}
+                  fill
+                  alt="Thumb"
+                />
+              )}
+            </label>
+            <label className="label">
+              <span className="label-text-alt text-red-500">{uploadError}</span>
+            </label>
+          </div>
+        )}
+
+        <div className="overflow-x-auto flex gap-2 flex-col-reverse">
+          {Object.entries(fileProgress).map(([fileName, progress]) => (
+            <div key={fileName} className="text-xs flex flex-col gap-1">
+              <p>{fileName}</p>
+              <div className="flex items-center gap-2">
+                <progress
+                  className="progress progress-primary w-full"
+                  value={progress}
+                  max="100"
+                />
+                {progress === 100 && (
+                  <>
+                    {fileStatus[fileName] === "Uploaded" ? (
+                      <FaCheck className="text-xl text-green-500 mr-4" />
+                    ) : (
+                      <FaTimes className="text-xl text-red-500 mr-4" />
+                    )}
+                  </>
+                )}
+              </div>
+              <p className="text-red-500">
+                {fileStatus[fileName] !== "Uploaded"
+                  ? fileStatus[fileName]
+                  : ""}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+      <div className="text-xs text-muted-foreground mt-4 flex justify-between">
+        <span className="mt-3">{fileLabel}</span>
+        <div className="flex items-center gap-x-2">
+          <Button type="submit">Save</Button>
+        </div>
+      </div>
+    </>
   );
 }

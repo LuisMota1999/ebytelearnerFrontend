@@ -168,6 +168,7 @@ const Calendar = () => {
           center: "title",
           right: "dayGridYear,dayGridMonth,timeGridWeek,timeGridDay",
         }}
+
         buttonText={{
           dayGridMonth: "Month",
           dayGridYear: "Year",

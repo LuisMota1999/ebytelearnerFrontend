@@ -23,6 +23,7 @@ export const columns: ColumnDef<Course>[] = [
       return (
         <HeaderWithDropdown
           columnName="Name"
+          onVisible={(state: boolean) => column.toggleVisibility(state)}
           onClick={(state: boolean) => column.toggleSorting(state)}
         />
       );
@@ -35,6 +36,7 @@ export const columns: ColumnDef<Course>[] = [
         </Link>
       );
     },
+    filterFn: 'includesString'
   },
   {
     accessorKey: "CoursePrice",
@@ -42,6 +44,7 @@ export const columns: ColumnDef<Course>[] = [
       return (
         <HeaderWithDropdown
           columnName="Price"
+          onVisible={(state: boolean) => column.toggleVisibility(state)}
           onClick={(state: boolean) => column.toggleSorting(state)}
         />
       );
@@ -55,6 +58,7 @@ export const columns: ColumnDef<Course>[] = [
 
       return <div className="px-4">{formatted}</div>;
     },
+    filterFn: 'inNumberRange',
   },
   {
     accessorKey: "IsPublished",
@@ -62,10 +66,12 @@ export const columns: ColumnDef<Course>[] = [
       return (
         <HeaderWithDropdown
           columnName="Published"
+          onVisible={(state: boolean) => column.toggleVisibility(state)}
           onClick={(state: boolean) => column.toggleSorting(state)}
         />
       );
     },
+    
     cell: ({ row }) => {
       const isPublished = row.getValue("IsPublished") || false;
 
