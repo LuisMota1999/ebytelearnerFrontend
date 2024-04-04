@@ -114,7 +114,8 @@ export function DataTableToolbar<TData>({
       label: "is any of",
     },
   ];
-  const data = table.getRow("1").original as any;
+
+  const data = table.getRowCount() > 0 ? table.getRow('0').original : null as any;
   const getValueByColumn = <K extends keyof Course>(column: K): Course[K] => {
     return data[column];
   };

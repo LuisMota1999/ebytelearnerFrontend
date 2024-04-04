@@ -227,7 +227,13 @@ export default function FileUploader(props: FileUploaderProps) {
       <div className="text-xs text-muted-foreground mt-4 flex justify-between">
         <span className="mt-3">{fileLabel}</span>
         <div className="flex items-center gap-x-2">
-          <Button type="submit">Save</Button>
+          <Button
+            type="submit"
+            disabled={selectedImage != null ? false : true}
+            onClick={() => fileUploadHandler(selectedImage, courseId)}
+          >
+            Save
+          </Button>
         </div>
       </div>
     </>
