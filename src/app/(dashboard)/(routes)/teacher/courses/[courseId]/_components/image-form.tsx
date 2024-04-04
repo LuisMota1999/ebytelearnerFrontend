@@ -1,12 +1,7 @@
 "use client";
 
-import * as z from "zod";
-import axios from "axios";
 import { Pencil, PlusCircle, ImageIcon } from "lucide-react";
 import { useState } from "react";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
@@ -18,18 +13,17 @@ interface ImageFormProps {
   courseId: string;
 }
 
-const formSchema = z.object({
-  CourseImageURL: z.string().min(1, {
-    message: "Image is required",
-  }),
-});
-
 export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [image, setImage] = useState<string>(
+    `https://lh3.googleusercontent.com/d/${initialData?.CourseImageURL}?authuser=1/view`
+  );
   const toggleEdit = () => setIsEditing((current) => !current);
 
-  const router = useRouter();
+  const handleImageUpdate = (fileId: string) => {
+    setImage(`https://lh3.googleusercontent.com/d/${fileId}?authuser=1/view`);
+    setIsEditing(false);
+  };
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
@@ -62,7 +56,7 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
               alt="Upload"
               fill
               className="object-cover rounded-md"
-              src={`https://lh3.googleusercontent.com/d/${initialData?.CourseImageURL}?authuser=1/view`}
+              src={image}
             />
           </div>
         ))}
@@ -72,9 +66,9 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
             method="PUT"
             fileLabel="16:9 aspect ratio recommended"
             courseId={courseId}
+            onFileUpdate={(file) => handleImageUpdate(file)}
             url={`${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/${courseId}/UploadCourseImage`}
           />
-          
         </div>
       )}
     </div>

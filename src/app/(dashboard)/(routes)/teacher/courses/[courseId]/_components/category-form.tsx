@@ -1,14 +1,11 @@
 "use client";
 
 import * as z from "zod";
-import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-
 import {
   Form,
   FormControl,
@@ -18,16 +15,20 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Textarea } from "@/components/ui/textarea";
-
 import { Course } from "@/types/types";
-import { Combobox } from "@/components/ui/combobox";
+import Combobox from "@/components/ui/combobox";
+import { useSession } from "next-auth/react";
+
+interface CategoryOptionsProps {
+  label: string;
+  value: string;
+}
 
 interface CategoryFormProps {
   initialData: Course;
   courseId: string;
-  options: { label: string; value: string; }[];
-};
+  options: CategoryOptionsProps[];
+}
 
 const formSchema = z.object({
   categoryId: z.string().min(1),
@@ -39,15 +40,21 @@ export const CategoryForm = ({
   options,
 }: CategoryFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
-
+  const { data: session } = useSession();
   const toggleEdit = () => setIsEditing((current) => !current);
+  const [course, setCourse] = useState<Course>(initialData);
+  const [selectedOption, setSelectedOption] = useState<
+    CategoryOptionsProps | undefined
+  >({
+    label: initialData.CourseCategory.CategoryName,
+    value: initialData.CourseCategory.Id,
+  });
 
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      categoryId: initialData?.CourseCategory?.Id || ""
+      categoryId: course?.CourseCategory?.Id || "",
     },
   });
 
@@ -55,16 +62,40 @@ export const CategoryForm = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course updated");
-      toggleEdit();
-      router.refresh();
-    } catch {
-      toast.error("Something went wrong");
-    }
-  }
+      setIsEditing(true); // Set loading state to true before fetch
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/Update/${courseId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.AccessToken}`,
+          },
+          body: JSON.stringify({
+            categoryId: values.categoryId,
+          }),
+        }
+      );
+      if (response.ok) {
+        const updatedCourse: Course = await response.json();
+console.log(updatedCourse);
+        setCourse(updatedCourse);
+        toast.success("Course category updated with success!");
+        toggleEdit();
 
-  const selectedOption = options!.find((option) => option.value === initialData?.CourseCategory?.Id);
+        // Update selected option after successful submission
+        const initialSelectedOption = options.find(
+          (option) => option.value === updatedCourse?.CourseCategory?.Id
+        );
+        setSelectedOption(initialSelectedOption);
+        console.log(initialSelectedOption?.label);
+      } else {
+        throw new Error("Failed to update course category");
+      }
+    } catch (error) {
+      toast.error("Something went wrong.. Try again later");
+    }
+  };
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
@@ -82,17 +113,18 @@ export const CategoryForm = ({
         </Button>
       </div>
       {!isEditing && (
-        <p className={cn(
-          "text-sm mt-2",
-          !initialData?.CourseCategory?.Id && "text-slate-500 italic"
-        )}>
+        <p
+          className={cn(
+            "text-sm mt-2",
+            !course?.CourseCategory?.Id && "text-slate-500 italic"
+          )}
+        >
           {selectedOption?.label || "No category"}
         </p>
       )}
       {isEditing && (
-        <Form  {...form}>
+        <Form {...form}>
           <form
-            
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4 mt-4"
           >
@@ -102,21 +134,14 @@ export const CategoryForm = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Combobox
-                      options={options}
-                      
-                      {...field}
-                    />
+                    <Combobox options={options} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <div className="flex items-center gap-x-2">
-              <Button
-                disabled={!isValid || isSubmitting}
-                type="submit"
-              >
+              <Button disabled={!isValid || isSubmitting} type="submit">
                 Save
               </Button>
             </div>
@@ -124,5 +149,5 @@ export const CategoryForm = ({
         </Form>
       )}
     </div>
-  )
-}
+  );
+};

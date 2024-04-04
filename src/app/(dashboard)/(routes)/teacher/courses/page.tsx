@@ -2,6 +2,7 @@ import { DataTable } from "./_components/data-table";
 import { columns } from "./_components/columns";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "../../../../api/auth/[...nextauth]/route";
+import { CourseForm } from "./_components/course-form";
 
 async function fetchCoursesData(session: any) {
   try {
@@ -19,7 +20,7 @@ async function fetchCoursesData(session: any) {
     );
     if (response.ok) {
       const responseBody = await response.json();
-      
+
       return responseBody;
     } else {
       console.log(session?.AccessToken);
@@ -34,11 +35,17 @@ async function fetchCoursesData(session: any) {
 const CoursesPage = async () => {
   const session = await getServerSession(nextAuthOptions);
   const courses = await fetchCoursesData(session);
-  return ( 
+
+  return (
     <div className="p-6">
-      <DataTable columns={columns} data={courses} />
+      <div>
+        <CourseForm />{" "}
+      </div>
+      <div>
+        <DataTable columns={columns} data={courses} />
+      </div>
     </div>
-   );
-}
- 
+  );
+};
+
 export default CoursesPage;

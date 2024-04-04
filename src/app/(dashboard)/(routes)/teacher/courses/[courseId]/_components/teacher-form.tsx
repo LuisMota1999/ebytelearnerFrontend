@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import { Course } from "@/types/types";
-import { Combobox } from "@/components/ui/combobox";
+import Combobox  from "@/components/ui/combobox";
 import { useSession } from "next-auth/react";
 
 interface TeacherFormProps {

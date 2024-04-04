@@ -137,8 +137,8 @@ export function DataTableToolbar<TData>({
     }
   };
   return (
-    <div className="w-full md:flex py-4">
-      <div className="grid gap-2 grid-cols-6">
+    <div className="w-full md:flex">
+      <div className="grid gap-2 grid-cols-9">
         <div className="col-span-6 md:col-span-3 lg:col-span-2 flex">
           <Select onValueChange={handleChangeColumn}>
             <SelectTrigger className="w-full outline-none">
@@ -187,7 +187,7 @@ export function DataTableToolbar<TData>({
           />
         </div>
         {isFiltered && (
-          <div className="col-span-6 md:col-span-3 lg:col-span-2 flex">
+          <div className="col-span-6 md:col-span-3 lg:col-span-2 flex items-center ">
             <Button
               variant="ghost"
               onClick={() => table.resetColumnFilters()}

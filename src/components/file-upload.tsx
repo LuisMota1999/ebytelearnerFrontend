@@ -5,6 +5,7 @@ import { FaCheck, FaCloudUploadAlt, FaTimes } from "react-icons/fa";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import { Input } from "./ui/input";
+import { Course } from "@/types/types";
 
 interface FileUploaderProps {
   courseId: string;
@@ -16,6 +17,7 @@ interface FileUploaderProps {
   label?: string;
   labelAlt?: string;
   fileLabel?: string;
+  onFileUpdate: (fileId: string) => void;
 }
 
 export default function FileUploader(props: FileUploaderProps) {
@@ -29,6 +31,7 @@ export default function FileUploader(props: FileUploaderProps) {
     allowMultiple = false,
     label = "",
     labelAlt = "",
+    onFileUpdate,
   } = props;
 
   const MAX_FILE_BYTES = maxFileSize * 1024 * 1024; // MB to bytes
@@ -120,8 +123,10 @@ export default function FileUploader(props: FileUploaderProps) {
     xhr.addEventListener("readystatechange", () => {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
+          const responseBody: Course = JSON.parse(xhr.responseText);
           setFileStatus((prev) => ({ ...prev, [file.name]: "Uploaded" }));
           setUploadSuccess(true);
+          onFileUpdate(responseBody!?.CourseImageURL as string);
         } else {
           setFileStatus((prev) => ({
             ...prev,

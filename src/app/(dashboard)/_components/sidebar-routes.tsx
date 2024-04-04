@@ -1,10 +1,33 @@
 "use client";
 
-import { BarChart, Calendar, Compass, GraduationCap, Layout, List, ShieldCheck, SquarePen } from "lucide-react";
+import {
+  BarChart,
+  Calendar,
+  FileHeart,
+  GraduationCap,
+  Layout,
+  List,
+  PackageOpen,
+  Settings,
+  ShieldCheck,
+  Trash,
+} from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
 import { Session } from "next-auth/core/types";
+import { Separator } from "@/components/ui/separator";
 
-const sharedRoutes = [
+interface RouteProps {
+  icon: any;
+  label: string;
+  href?: string;
+  children?: {
+    icon: any;
+    label: string;
+    href: string;
+  }[];
+}
+
+const sharedRoutes: RouteProps[] = [
   {
     icon: Layout,
     label: "Dashboard",
@@ -13,11 +36,10 @@ const sharedRoutes = [
   },
 ];
 
-const privilegedRoutes = [
+const privilegedRoutes: RouteProps[] = [
   {
     icon: GraduationCap,
     label: "Courses",
-    href: "/courses",
     children: [
       {
         icon: List,
@@ -32,17 +54,44 @@ const privilegedRoutes = [
       {
         icon: ShieldCheck,
         label: "Grades",
-        href: ""
-      }
+        href: "/teacher/courses/grades",
+      },
     ],
   },
+  {
+    icon: PackageOpen,
+    label: "Storage",
+    children: [
+      {
+        icon: FileHeart,
+        label: "Favorites",
+        href: "/teacher/storage/favorites",
+      },
+      {
+        icon: List,
+        label: "List",
+        href: "/teacher/storage/list",
+      },
+      {
+        icon: Trash,
+        label: "Trash",
+        href: "/teacher/storage/trash",
+      },
+    ],
+  },
+
   {
     icon: BarChart,
     label: "Analytics",
     href: "/teacher/analytics",
     children: [],
   },
-  
+  {
+    icon: Settings,
+    label: "Settings",
+    href: "/settings",
+    children: [],
+  },
 ];
 
 export const SidebarRoutes: React.FC<{ session: Session }> = ({ session }) => {
@@ -62,18 +111,40 @@ export const SidebarRoutes: React.FC<{ session: Session }> = ({ session }) => {
       ? allRoutes
       : sharedRoutes;
 
+  const settingsRoute = routesRoleBased.find(
+    (route) => route.label === "Settings"
+  );
+  const otherRoutes = routesRoleBased.filter(
+    (route) => route.label !== "Settings"
+  );
+
   return (
-    <div className="flex flex-col w-full">
-      {routesRoleBased.map((route, index) => (
-        <SidebarItem
-          key={index}
-          icon={route.icon}
-          label={route.label}
-          href={route.href}
-          children={route.children}
-        />
-      ))}
+    <div className="flex flex-col w-full h-full">
+      <div className="flex flex-col justify-between h-full">
+        <div className="w-full ">
+          {otherRoutes.map((route, index) => (
+            <SidebarItem
+              key={index}
+              icon={route.icon}
+              label={route.label}
+              href={route.href!}
+              children={route.children!}
+            />
+          ))}
+        </div>
+        <div className="w-full">
+          <Separator />
+          {settingsRoute && (
+            <SidebarItem
+              key="settings"
+              icon={settingsRoute.icon}
+              label={settingsRoute.label}
+              href={settingsRoute.href!}
+              children={settingsRoute.children!}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };
-

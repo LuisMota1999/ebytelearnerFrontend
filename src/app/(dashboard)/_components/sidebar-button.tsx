@@ -16,7 +16,7 @@ const ButtonSidebarComponent: React.FC<ButtonComponentProps> = ({ label, onClick
       onClick={onClick}
       type="button"
       className={cn(
-        "flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-6 transition-all hover:text-slate-600 hover:bg-slate-300/20",
+        "flex items-center gap-x-2 w-full text-slate-500 text-sm font-[500] pl-6 transition-all hover:text-slate-600 hover:bg-slate-300/20",
         isActive &&
           "text-green-800 bg-sky-200/20 hover:bg-sky-200/20 hover:text-green-800"
       )}

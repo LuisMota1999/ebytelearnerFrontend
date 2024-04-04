@@ -7,7 +7,7 @@ export const Sidebar = ({session} : any) => {
       <div className="p-6 flex flex-col justify-center items-center">
         <Logo/>
       </div>
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full h-full">
         <SidebarRoutes session={session}/>
       </div>
     </div>
