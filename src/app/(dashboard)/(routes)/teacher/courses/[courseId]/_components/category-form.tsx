@@ -46,10 +46,9 @@ export const CategoryForm = ({
   const [selectedOption, setSelectedOption] = useState<
     CategoryOptionsProps | undefined
   >({
-    label: initialData.CourseCategory.CategoryName,
-    value: initialData.CourseCategory.Id,
+    label: initialData?.CourseCategory?.CategoryName,
+    value: initialData?.CourseCategory?.Id,
   });
-
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -78,12 +77,10 @@ export const CategoryForm = ({
       );
       if (response.ok) {
         const updatedCourse: Course = await response.json();
-console.log(updatedCourse);
         setCourse(updatedCourse);
         toast.success("Course category updated with success!");
         toggleEdit();
 
-        // Update selected option after successful submission
         const initialSelectedOption = options.find(
           (option) => option.value === updatedCourse?.CourseCategory?.Id
         );

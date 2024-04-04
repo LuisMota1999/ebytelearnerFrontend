@@ -67,7 +67,9 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  
+  if(!data){
+    return (<div>Loading...</div>)
+  }
 
   return (
     <div>

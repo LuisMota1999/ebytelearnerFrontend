@@ -39,8 +39,9 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
   const toggleCreating = () => {
     setIsCreating((current) => !current);
   };
-  const [courseModules, setCourseModules] = useState<CourseModule[]>(initialData.CourseModules); // Manage course modules separately
-
+  const [courseModules, setCourseModules] = useState<CourseModule[]>(
+    initialData.CourseModules
+  ); // Manage course modules separately
 
   const router = useRouter();
 
@@ -56,22 +57,25 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsCreating(true); // Set loading state to true before fetch
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_NEXT_URL}/Module/Create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.AccessToken}`,
-        },
-        body: JSON.stringify({
-          moduleName: values.moduleName,
-          courseId: courseId,
-        }),
-        
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_NEXT_URL}/Module/Create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.AccessToken}`,
+          },
+          body: JSON.stringify({
+            moduleName: values.moduleName,
+            courseId: courseId,
+          }),
+        }
+      );
       if (response.ok) {
+        form.reset();
         const newModule: CourseModule = await response.json();
         // Update courseModules state by adding the new module
-        setCourseModules(prevModules => [...prevModules, newModule]);
+        setCourseModules((prevModules) => [...prevModules, newModule]);
         toast.success("Chapter created");
         toggleCreating();
       } else {
@@ -80,20 +84,20 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
     } catch {
       toast.error("Something went wrong");
     } finally {
-        setIsCreating(false); // Reset loading state after fetch completes
+      setIsCreating(false); // Reset loading state after fetch completes
     }
   };
 
   const onReorder = async (updateData: { id: string; position: number }[]) => {
     try {
-    //   setIsUpdating(true);
+      //   setIsUpdating(true);
 
-    //   await axios.put(`/api/courses/${courseId}/chapters/reorder`, {
-    //     list: updateData,
-    //   });
-    //   toast.success("Chapters reordered");
-    //   router.refresh();
-    console.log(updateData);
+      //   await axios.put(`/api/courses/${courseId}/chapters/reorder`, {
+      //     list: updateData,
+      //   });
+      //   toast.success("Chapters reordered");
+      //   router.refresh();
+      console.log(updateData);
     } catch {
       toast.error("Something went wrong");
     } finally {

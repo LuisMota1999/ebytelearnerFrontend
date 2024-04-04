@@ -9,11 +9,13 @@ interface Props {
 }
 
 export default function CoursesList({ courses }: Props) { // Destructure courses from props
-
+  if(!courses){
+    return (<div>Loading...</div>)
+  }
   return (
     <Suspense fallback={<Loading interval={70} />}>
       {courses.length === 0 && <NoResults />}
-      <div className="space-y-4">
+      <div className="py-4">
         
         <div className="grid gap-4 grid-cols-6">
           {courses.map((item, index) => (

@@ -28,7 +28,6 @@ import {
 } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
 import { Input } from "@/components/ui/input";
 const formSchema = z.object({
   courseName: z.string().min(3, {
@@ -85,7 +84,6 @@ export const CourseForm = () => {
 
         setShowModal(false);
       } else {
-        // Handle error response from API
         throw new Error("Failed to create course");
       }
     } catch (error) {
@@ -99,7 +97,10 @@ export const CourseForm = () => {
 
   return (
     <div className="flex flex-row justify-between">
-      <h1 className="text-2xl font-medium gap-y-2 w-1/2">Courses List</h1>
+      <div className="flex flex-col">
+        <h1 className="text-2xl gap-y-2 w-full font-semibold">Courses List</h1>
+      </div>
+
       <div className="w-1/2 flex flex-row">
         <div className="ml-auto mr-0 lg:mr-2">
           <Dialog open={showModal} onOpenChange={setShowModal}>

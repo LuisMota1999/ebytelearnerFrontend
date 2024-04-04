@@ -1,16 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Pencil } from "lucide-react";
 import Link from "next/link";
-
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { Course } from "@/types/types";
@@ -53,7 +44,7 @@ export const columns: ColumnDef<Course>[] = [
       const price = parseFloat(row.getValue("CoursePrice") || "0");
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: "USD",
+        currency: "EUR",
       }).format(price);
 
       return <div className="px-4">{formatted}</div>;
