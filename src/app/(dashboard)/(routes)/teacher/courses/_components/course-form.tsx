@@ -11,6 +11,13 @@ import { Course } from "@/types/types";
 import { ToastAction } from "@/components/ui/toast";
 import { toast } from "@/components/ui/use-toast";
 import { PlusCircle } from "lucide-react";
+import { HiOutlineLightBulb } from "react-icons/hi";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   Dialog,
   DialogContent,
@@ -31,10 +38,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 const formSchema = z.object({
   courseName: z.string().min(3, {
-    message: "Course Name must have at least 3 characters.",
+    message: "Course name must have at least 3 characters.",
   }),
   courseDescription: z.string().min(3, {
-    message: "Course Name must have at least 3 characters.",
+    message: "Course description must have at least 3 characters.",
   }),
   coursePrice: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
     message: "Expected number, received a string",
@@ -151,24 +158,55 @@ export const CourseForm = () => {
                     </div>
 
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="courseDescription" className="text-left">
+                      <Label
+                        htmlFor="courseDescription"
+                        className="text-left col-span-1"
+                      >
                         Course Description
                       </Label>
                       <FormField
                         control={form.control}
                         name="courseDescription"
                         render={({ field }) => (
-                          <FormItem className="flex flex-col col-span-3 ">
+                          <FormItem className="flex flex-col col-span-3 relative">
                             <FormMessage>
                               {form.formState.errors.courseDescription?.message}
                             </FormMessage>{" "}
                             <FormControl>
-                              <Textarea
-                                disabled={isSubmitting}
-                                placeholder="Tell us a little bit about the course"
-                                className="resize-none bg-slate-100 outline-none text-sm flex-1 border-none"
-                                {...field}
-                              />
+                              <div className="relative bg-slate-100 w-full flex items-center my-2">
+                                <div className="absolute top-0 right-0">
+                                  <TooltipProvider>
+                                    <Tooltip>
+                                      <TooltipTrigger>
+                                        <button
+                                          type="button"
+                                          className="p-0 m-0 my-[-5px]"
+                                          onClick={(e) => {
+                                            e.stopPropagation(); // Prevent propagation of the click event
+                                          }}
+                                        >
+                                          <HiOutlineLightBulb
+                                            size={20}
+                                            className=" text-gray-400 mr-2 mt-2 hover:text-black cursor-pointer"
+                                          />
+                                        </button>
+                                      </TooltipTrigger>
+                                      <TooltipContent className="data-[side=left]:slide-in-from-right-36 data-[side=right]:slide-in-from-left-0">
+                                        <span className="text-slate-400 text-xs">
+                                          AI Generated course description
+                                        </span>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                </div>
+
+                                <Textarea
+                                  disabled={isSubmitting}
+                                  placeholder="Tell us a little bit about the course"
+                                  className="resize-none bg-slate-100 outline-none text-sm flex-1 border-none "
+                                  {...field}
+                                />
+                              </div>
                             </FormControl>
                           </FormItem>
                         )}

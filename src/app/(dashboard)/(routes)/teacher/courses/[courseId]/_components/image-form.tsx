@@ -15,8 +15,10 @@ interface ImageFormProps {
 
 export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [image, setImage] = useState<string>(
-    `https://lh3.googleusercontent.com/d/${initialData?.CourseImageURL}?authuser=1/view`
+  const [image, setImage] = useState<string | null>(
+    initialData?.CourseImageURL
+      ? `https://lh3.googleusercontent.com/d/${initialData?.CourseImageURL}?authuser=1/view`
+      : null
   );
   const toggleEdit = () => setIsEditing((current) => !current);
 
@@ -46,7 +48,7 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
         </Button>
       </div>
       {!isEditing &&
-        (!initialData?.CourseImageURL ? (
+        (!image ? (
           <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
             <ImageIcon className="h-10 w-10 text-slate-500" />
           </div>

@@ -41,7 +41,7 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
   };
   const [courseModules, setCourseModules] = useState<CourseModule[]>(
     initialData.CourseModules
-  ); // Manage course modules separately
+  );
 
   const router = useRouter();
 

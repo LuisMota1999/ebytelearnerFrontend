@@ -30,6 +30,25 @@ export const columns: ColumnDef<Course>[] = [
     filterFn: 'includesString'
   },
   {
+    accessorKey: "CourseModules",
+    header: ({ column }) => {
+      return (
+        <HeaderWithDropdown
+          columnName="Chapters Nº"
+          onVisible={(state: boolean) => column.toggleVisibility(state)}
+          onClick={(state: boolean) => column.toggleSorting(state)}
+        />
+      );
+    },
+    cell: ({ row }) => {
+      const { CourseModules } = row.original;
+      return (
+        <div className="px-14">{CourseModules.length}</div>
+      );
+    },
+    filterFn: 'inNumberRange'
+  },
+  {
     accessorKey: "CoursePrice",
     header: ({ column }) => {
       return (

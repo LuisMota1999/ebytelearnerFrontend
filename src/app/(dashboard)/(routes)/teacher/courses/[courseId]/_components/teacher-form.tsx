@@ -39,7 +39,7 @@ export const TeacherForm = ({
   const [isEditing, setIsEditing] = useState(false);
   const { data: session } = useSession();
   const toggleEdit = () => setIsEditing((current) => !current);
-  const [teacher, setTeacher] = useState<Course>(initialData);
+  const [course, setCourse] = useState<Course>(initialData);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -69,18 +69,18 @@ export const TeacherForm = ({
       if (response.ok) {
         const updatedCourse: Course = await response.json();
 
-        setTeacher(updatedCourse);
-        toast.success("Course name updated with success!");
+        setCourse(updatedCourse);
+        toast.success("Course teacher updated with success!");
         toggleEdit();
       } else {
-        throw new Error("Failed to create module");
+        throw new Error("Failed to update teacher");
       }
     } catch {
       toast.error("Something went wrong");
     }
   };
 
-  const selectedOption = options!.find((option) => option.value === initialData?.CourseTeacher?.Id);
+  const selectedOption = options!.find((option) => option.value === course?.CourseTeacher?.Id);
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
@@ -100,7 +100,7 @@ export const TeacherForm = ({
       {!isEditing && (
         <p className={cn(
           "text-sm mt-2",
-          !initialData?.CourseTeacher?.Id && "text-slate-500 italic"
+          !course?.CourseTeacher?.Id && "text-slate-500 italic"
         )}>
           {selectedOption?.label || "No teacher"}
         </p>

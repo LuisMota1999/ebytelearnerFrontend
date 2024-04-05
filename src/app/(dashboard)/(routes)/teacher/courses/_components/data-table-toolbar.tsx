@@ -139,7 +139,7 @@ export function DataTableToolbar<TData>({
   return (
     <div className="w-full md:flex">
       <div className="grid gap-2 grid-cols-9">
-        <div className="col-span-6 md:col-span-3 lg:col-span-2 flex">
+        <div className="col-span-9 md:col-span-3 lg:col-span-2 flex">
           <Select onValueChange={handleChangeColumn}>
             <SelectTrigger className="w-full outline-none">
               <SelectValue placeholder="Columns" />
@@ -155,7 +155,7 @@ export function DataTableToolbar<TData>({
             </SelectContent>
           </Select>
         </div>
-        <div className="col-span-6 md:col-span-3 lg:col-span-2 flex">
+        <div className="col-span-9 md:col-span-3 lg:col-span-2 flex">
           <Select>
             <SelectTrigger className="w-full outline-none">
               <SelectValue placeholder="Operator" />
@@ -171,7 +171,7 @@ export function DataTableToolbar<TData>({
             </SelectContent>
           </Select>
         </div>
-        <div className="col-span-6 md:col-span-3 lg:col-span-2 flex">
+        <div className="col-span-9 md:col-span-3 lg:col-span-2 flex">
           <Input
             placeholder="Filter value"
             className="w-full outline-none text-sm flex-1 "

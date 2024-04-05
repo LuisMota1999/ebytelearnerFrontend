@@ -133,6 +133,7 @@ export const SidebarRoutes: React.FC<{ session: Session }> = ({ session }) => {
           ))}
         </div>
         <div className="w-full">
+          <span className="text-xs text-slate-500 flex justify-center items-center">Copyright Luis Mota © 2024 </span>
           <Separator />
           {settingsRoute && (
             <SidebarItem

@@ -151,9 +151,10 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
   ];
 
   const totalFields = requiredFields.length;
-  const completedFields = requiredFields.filter(Boolean).length;
+  const completedFields = requiredFields.filter(field => field !== null && !(Array.isArray(field) && field.length === 0)).length;
   const completionText = `(${completedFields}/${totalFields})`;
-  const isComplete = requiredFields.every(Boolean);
+  const isComplete = requiredFields.every(field => field !== null && !(Array.isArray(field) && field.length === 0));
+
   return (
     <>
       {!course?.IsPublished && (
