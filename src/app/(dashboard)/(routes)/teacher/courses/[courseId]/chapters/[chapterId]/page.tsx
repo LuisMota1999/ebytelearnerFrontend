@@ -11,6 +11,7 @@ import { ChapterActions } from "./_components/chapter-actions";
 import { CourseModule } from "@/types/types";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
+import PdfRenderer from "@/components/pdf/PdfRenderer";
 
 async function fetchCourseModuleData(session: any, moduleId: string) {
   try {
@@ -124,6 +125,7 @@ const ChapterIdPage = async ({
               <IconBadge icon={Video} />
               <h2 className="text-xl">Add a Presentation</h2>
             </div>
+            <PdfRenderer url={""} />
           </div>
         </div>
       </div>

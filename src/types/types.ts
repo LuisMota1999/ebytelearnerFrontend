@@ -60,6 +60,16 @@ export interface CourseModule {
   ModuleDescription: string
   IsFree: any
   IsPublished: any
+  ModulePDFId: Pdf;
+}
+
+export interface Pdf {
+  Id: string
+  PDFName: string
+  PDFNumberPages: number
+  PDFContent: string
+  PDFLength: number
+  PDFPath: string
 }
 
 export interface User {

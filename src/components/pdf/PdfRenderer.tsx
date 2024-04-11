@@ -33,6 +33,8 @@ import {
 import SimpleBar from 'simplebar-react'
 import PdfFullscreen from './PdfFullscreen'
 
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+
 interface PdfRendererProps {
   url: string
 }
@@ -109,7 +111,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
                 'w-12 h-8',
                 errors.page && 'focus-visible:ring-red-500'
               )}
-              onKeyDown={(e) => {
+              onKeyDown={(e: { key: string }) => {
                 if (e.key === 'Enter') {
                   handleSubmit(handlePageSubmit)()
                 }
@@ -177,7 +179,7 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
             <RotateCw className='h-4 w-4' />
           </Button>
 
-         
+          <PdfFullscreen fileUrl={url} />
         </div>
       </div>
 
@@ -185,7 +187,53 @@ const PdfRenderer = ({ url }: PdfRendererProps) => {
         <SimpleBar
           autoHide={false}
           className='max-h-[calc(100vh-10rem)]'>
-          
+          <div ref={ref}>
+            <Document
+              loading={
+                <div className='flex justify-center'>
+                  <Loader2 className='my-24 h-6 w-6 animate-spin' />
+                </div>
+              }
+              onLoadError={() => {
+                toast({
+                  title: 'Error loading PDF',
+                  description: 'Please try again later',
+                  variant: 'destructive',
+                })
+              }}
+              onLoadSuccess={({ numPages }) =>
+                setNumPages(numPages)
+              }
+              file={url}
+              className='max-h-full'>
+              {isLoading && renderedScale ? (
+                <Page
+                  width={width ? width : 1}
+                  pageNumber={currPage}
+                  scale={scale}
+                  rotate={rotation}
+                  key={'@' + renderedScale}
+                />
+              ) : null}
+
+              <Page
+                className={cn(isLoading ? 'hidden' : '')}
+                width={width ? width : 1}
+                pageNumber={currPage}
+                scale={scale}
+                rotate={rotation}
+                key={'@' + scale}
+                loading={
+                  <div className='flex justify-center'>
+                    <Loader2 className='my-24 h-6 w-6 animate-spin' />
+                  </div>
+                }
+                onRenderSuccess={() =>
+                  setRenderedScale(scale)
+                }
+              />
+            </Document>
+          </div>
         </SimpleBar>
       </div>
     </div>
