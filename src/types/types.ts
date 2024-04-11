@@ -47,6 +47,7 @@ export interface Course {
   CourseModules: CourseModule[]
   CourseTeacher: User
   IsPublished: any
+  CourseDirectory: string
 }
 
 export interface CourseCategory {

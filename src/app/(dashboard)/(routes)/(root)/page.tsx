@@ -66,7 +66,7 @@ export default function HomePage() {
                   <CardHeader className="flex flex-col items-center md:items-start space-y-1.5 p-6">
                     <CardTitle>
                       Welcome back 👋{" "}
-                      <p className="text-sm">{session?.User.Email}</p>
+                      <p className="text-sm">admin@ebylearner.com</p>
                     </CardTitle>
                     <p className="text-sm text-gray-600 pt-3 pb-6">
                       If you are going to use a passage of Lorem Ipsum, you need
