@@ -12,8 +12,14 @@ import { useRouter } from "next/navigation";
 
 interface AccordionComponentProps {
   label: string;
-  children: { href?: string; label?: string; icon?: LucideIcon }[];
+  children: {
+    href?: string;
+    label?: string;
+    icon?: LucideIcon;
+  }[];
   isActive: boolean;
+  onClick: () => void;
+  currentSelectedItem: string;
   Icon?: LucideIcon;
 }
 
@@ -21,19 +27,22 @@ const AccordionSidebarComponent: React.FC<AccordionComponentProps> = ({
   label,
   children,
   isActive,
+  onClick,
+  currentSelectedItem,
   Icon,
 }) => {
   const router = useRouter();
   const [activeChild, setActiveChild] = useState<number | null>(null);
 
-  const onClick = (hrefChildren: string, index: number) => () => {    
+  const onChildrenClick = (hrefChildren: string, index: number) => () => {
     router.push(hrefChildren);
-    setActiveChild(index == activeChild ? null : index);
+    setActiveChild(index == activeChild ? activeChild : index);
+    
   };
 
   return (
     <Accordion type="single" collapsible>
-      <AccordionItem value={label} className="border-b-0">
+      <AccordionItem onClick={onClick} value={label} className="border-b-0" >
         <AccordionTrigger
           className={cn(
             "flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-6 transition-all hover:text-slate-600 hover:bg-slate-300/20",
@@ -57,7 +66,7 @@ const AccordionSidebarComponent: React.FC<AccordionComponentProps> = ({
               <ButtonSidebarComponent
                 key={index}
                 label={child.label || ""}
-                onClick={onClick(child.href ? child.href : "", index)}
+                onClick={onChildrenClick(child.href ? child.href : "", index)}
                 isActive={index === activeChild}
                 Icon={child.icon}
                 className="px-4 text-sm"

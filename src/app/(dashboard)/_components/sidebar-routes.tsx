@@ -15,6 +15,8 @@ import {
 import { SidebarItem } from "./sidebar-item";
 import { Session } from "next-auth/core/types";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface RouteProps {
   icon: any;
@@ -117,6 +119,18 @@ export const SidebarRoutes: React.FC<{ session: Session }> = ({ session }) => {
   const otherRoutes = routesRoleBased.filter(
     (route) => route.label !== "Settings"
   );
+  const router = useRouter();
+
+  const [currentSelectedItem, setCurrentSelectedItem] =
+    useState<string>("Dashboard");
+  const [currentHref, setCurrentHref] = useState<string>("/");
+  const handleItemClick = (label: string, href: string) => {
+    setCurrentSelectedItem(label);
+    if (href !== undefined) {
+      setCurrentHref(href);
+      router.push(href);
+    }
+  };
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -128,12 +142,16 @@ export const SidebarRoutes: React.FC<{ session: Session }> = ({ session }) => {
               icon={route.icon}
               label={route.label}
               href={route.href!}
+              onClick={() => handleItemClick(route.label, route.href!)}
               children={route.children!}
+              currentSelectedItem={currentSelectedItem}
             />
           ))}
         </div>
         <div className="w-full">
-          <span className="text-xs text-slate-500 flex justify-center items-center">Copyright Luis Mota © 2024 </span>
+          <span className="text-xs text-slate-500 flex justify-center items-center">
+            Copyright Luis Mota © 2024{" "}
+          </span>
           <Separator />
           {settingsRoute && (
             <SidebarItem
@@ -141,7 +159,9 @@ export const SidebarRoutes: React.FC<{ session: Session }> = ({ session }) => {
               icon={settingsRoute.icon}
               label={settingsRoute.label}
               href={settingsRoute.href!}
+              onClick={() => handleItemClick(currentSelectedItem, currentHref)}
               children={settingsRoute.children!}
+              currentSelectedItem={currentSelectedItem}
             />
           )}
         </div>

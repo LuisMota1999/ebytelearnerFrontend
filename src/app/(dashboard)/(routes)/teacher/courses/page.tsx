@@ -1,11 +1,13 @@
+'use client';
 import { DataTable } from "./_components/data-table";
 import { columns } from "./_components/columns";
-import { getServerSession } from "next-auth";
-import { nextAuthOptions } from "../../../../api/auth/[...nextauth]/route";
 import { CourseForm } from "./_components/course-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CoursesList from "@/components/course/course-List";
-import { GridIcon, Loader2, RowsIcon } from "lucide-react";
+import { GridIcon, RowsIcon } from "lucide-react";
+import { useState, useEffect } from 'react'; // If you're using React Hooks
+import { useSession } from "next-auth/react";
+
 async function fetchCoursesData(session: any) {
   try {
     const returnRowsParam = session?.AccessToken ? `?returnRows=${100}` : "";
@@ -26,6 +28,7 @@ async function fetchCoursesData(session: any) {
       return responseBody;
     } else {
       console.log(session?.AccessToken);
+      
       throw new Error("Failed to fetch course data");
     }
   } catch (error) {
@@ -34,10 +37,34 @@ async function fetchCoursesData(session: any) {
   }
 }
 
-const CoursesPage = async () => {
-  const session = await getServerSession(nextAuthOptions);
-  const courses = await fetchCoursesData(session);
+const CoursesPage = () => {
+  const [courses, setCourses] = useState(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const { data: session } = useSession();
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const fetchedCourses = await fetchCoursesData(session);
+        setCourses(fetchedCourses); // Update courses state
+        setLoading(false);
+      } catch (error) {
+        setError("Failed to fetch data");
+        setLoading(false);
+        console.error('Error fetching courses:', error);
+      }
+    };
 
+    fetchCourses();
+  }, [session]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   return (
     <div className="p-6">
       <CourseForm />
@@ -53,10 +80,10 @@ const CoursesPage = async () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="grid">
-          <CoursesList courses={courses} />
+          <CoursesList courses={courses!} />
         </TabsContent>
         <TabsContent value="table">
-          <DataTable columns={columns} data={courses} />
+          <DataTable columns={columns} data={courses!} />
         </TabsContent>
       </Tabs>
     </div>

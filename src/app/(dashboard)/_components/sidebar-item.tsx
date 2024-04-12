@@ -1,17 +1,5 @@
-"use client";
-
 import { LucideIcon } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
 
-import { cn } from "@/lib/utils";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
 import AccordionSidebarComponent from "./sidebar-accordion";
 import ButtonSidebarComponent from "./sidebar-button";
 
@@ -20,12 +8,15 @@ interface SidebarItemProps {
   label: string;
   href: string;
   children: SidebarItemChildrenProps[];
+  onClick: () => void;
+  currentSelectedItem: string;
 }
 
 interface SidebarItemChildrenProps {
   icon?: LucideIcon;
   label?: string;
   href?: string;
+  
 }
 
 export const SidebarItem = ({
@@ -33,27 +24,34 @@ export const SidebarItem = ({
   label,
   href,
   children,
+  onClick,
+  currentSelectedItem,
 }: SidebarItemProps) => {
-  const pathname = usePathname();
-  const router = useRouter();
 
   const isActive =
-    (pathname === "/" && href === "/") ||
-    pathname === href ||
-    pathname?.startsWith(`${href}/`);
-
-  const onClick = () => {
-    router.push(href);
-  };
+    (currentSelectedItem  === "Dashboard" && href === "/") ||
+    currentSelectedItem  === label  ||
+    currentSelectedItem?.startsWith(`${href}/`);
 
   return (
     <>
       {children.length > 0 ? (
-        <AccordionSidebarComponent label={label} children={children} isActive={isActive} Icon={Icon} />
+        <AccordionSidebarComponent
+          label={label}
+          children={children}
+          isActive={isActive}
+          onClick={onClick}
+          currentSelectedItem={currentSelectedItem}
+          Icon={Icon}
+        />
       ) : (
-        <ButtonSidebarComponent label={label} onClick={onClick} isActive={isActive} Icon={Icon} />
+        <ButtonSidebarComponent
+          label={label}
+          onClick={onClick}
+          isActive={isActive}
+          Icon={Icon}
+        />
       )}
     </>
   );
-  
 };
