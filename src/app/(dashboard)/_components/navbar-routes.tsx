@@ -35,9 +35,37 @@ import { Country } from "@/types/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 
+async function fetchFlagData() {
+  try {
+    const response = await fetch(
+      `https://countriesnow.space/api/v0.1/countries/flag/images`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.ok) {
+      const responseBody = await response.json();
+
+      return responseBody.data;
+    } else {
+      throw new Error("Failed to fetch flag data");
+    }
+  } catch (error) {
+    console.error("Error fetching flag data:", error);
+    throw error;
+  }
+}
+
 export const NavbarRoutes = () => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("United Kingdom");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [flagData, setFlagData] = useState<Country[]>([]);
   const { data: session } = useSession();
   const router = useRouter();
   async function logout() {
@@ -48,23 +76,21 @@ export const NavbarRoutes = () => {
     router.replace("/sign-in");
   }
 
-  const [flagData, setFlagData] = useState<Country[]>([]);
-
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchFlag = async () => {
       try {
-        const response = await fetch(
-          `https://countriesnow.space/api/v0.1/countries/flag/images`,
-          { cache: "force-cache" }
-        );
-        const data = await response.json();
-        setFlagData(data.data as Country[]);
+        const flagData = await fetchFlagData();
+        setFlagData(flagData); 
+        console.log(flagData);
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        setError("Failed to fetch data");
+
+        console.error("Error fetching flag:", error);
       }
     };
 
-    fetchData();
+    fetchFlag();
   }, []);
 
   return (
@@ -112,79 +138,86 @@ export const NavbarRoutes = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
-      <div className="mx-2">
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className="w-auto justify-between"
-            >
-              {value ? (
-                <div className="flex items-center">
-                  <img
-                    src={
-                      flagData.find((flagData) => flagData.name === value)?.flag
-                    }
-                    alt={`Flag of ${
-                      flagData.find((flagData) => flagData.name === value)?.name
-                    }`}
-                    className="w-8 h-6 m-1"
-                    loading="lazy"
-                  />
-                  <span className="hidden md:block">
-                    {flagData.find((flagData) => flagData.name === value)?.name}
-                  </span>
-                </div>
-              ) : (
-                "Select Country..."
-              )}
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-
-          <PopoverContent className="w-auto p-0 mr-4">
-            <ScrollArea className="h-96 w-auto rounded-md border p-4">
-              <Command>
-                <CommandInput placeholder="Search framework..." />
-                <CommandEmpty>No country found.</CommandEmpty>
-                <CommandGroup>
-                  {flagData.map((flagData, index) => (
-                    <CommandItem
-                      className="w-10"
-                      key={index}
-                      value={flagData.name}
-                      onSelect={(currentValue) => {
-                        setValue(currentValue === value ? "" : currentValue);
-                        setOpen(false);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          value === flagData.name ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-
-                      <div key={index} className="flex items-center">
-                        <img
-                          src={flagData.flag}
-                          alt={`Flag of ${flagData.name}`}
-                          className="w-8 h-8 rounded-full mr-2"
-                          loading="lazy"
+      {!loading && (
+        <div className="mx-2">
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-auto justify-between"
+              >
+                {value ? (
+                  <div className="flex items-center">
+                    <img
+                      src={
+                        flagData.find((flagData) => flagData.name === value)
+                          ?.flag
+                      }
+                      alt={`Flag of ${
+                        flagData.find((flagData) => flagData.name === value)
+                          ?.name
+                      }`}
+                      className="w-8 h-6 m-1"
+                      loading="lazy"
+                    />
+                    <span className="hidden md:block">
+                      {
+                        flagData.find((flagData) => flagData.name === value)
+                          ?.name
+                      }
+                    </span>
+                  </div>
+                ) : (
+                  "Select Country..."
+                )}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 mr-4">
+              <ScrollArea className="h-96 w-auto rounded-md border p-4">
+                <Command>
+                  <CommandInput placeholder="Search framework..." />
+                  <CommandEmpty>No country found.</CommandEmpty>
+                  <CommandGroup>
+                    {flagData.map((flagData, index) => (
+                      <CommandItem
+                        className="w-10"
+                        key={index}
+                        value={flagData.name}
+                        onSelect={(currentValue) => {
+                          setValue(currentValue === value ? "" : currentValue);
+                          setOpen(false);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            value === flagData.name
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
                         />
-                        <span>{flagData.name}</span>
-                      </div>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </Command>
-            </ScrollArea>
-          </PopoverContent>
-        </Popover>
-      </div>
+
+                        <div key={index} className="flex items-center">
+                          <img
+                            src={flagData.flag}
+                            alt={`Flag of ${flagData.name}`}
+                            className="w-8 h-8 rounded-full mr-2"
+                            loading="lazy"
+                          />
+                          <span>{flagData.name}</span>
+                        </div>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </Command>
+              </ScrollArea>
+            </PopoverContent>
+          </Popover>
+        </div>
+      )}
     </div>
   );
 };

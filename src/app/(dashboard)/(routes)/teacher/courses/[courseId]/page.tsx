@@ -9,7 +9,7 @@ import {
   Settings,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PriceForm } from "./_components/price-form";
 import { TitleForm } from "./_components/title-form";
 import { DescriptionForm } from "./_components/description-form";
@@ -108,8 +108,22 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
   const [teacher, setTeacher] = useState<User[] | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const requiredFields = [
+    course?.CourseName,
+    course?.CourseDescription,
+    course?.CoursePrice,
+    course?.CourseCategory,
+    course?.CourseTeacher,
+    course?.CourseModules,
+  ];
 
-  useEffect(() => {
+  const totalFields = requiredFields.length;
+  
+  const completedFields = requiredFields.filter(field => field !== null && !(Array.isArray(field) && field.length === 0)).length
+  const completionText = `(${completedFields}/${totalFields})`;
+  const isComplete = requiredFields.every(field => field !== null && !(Array.isArray(field) && field.length === 0));
+
+  useMemo(() => {
     const fetchData = async () => {
       try {
         const [categoryData, teacherData, courseData] = await Promise.all([
@@ -140,20 +154,6 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
   if (error) {
     return <div>Error: {error}</div>;
   }
-
-  const requiredFields = [
-    course?.CourseName,
-    course?.CourseDescription,
-    course?.CoursePrice,
-    course?.CourseCategory,
-    course?.CourseTeacher,
-    course?.CourseModules,
-  ];
-
-  const totalFields = requiredFields.length;
-  const completedFields = requiredFields.filter(field => field !== null && !(Array.isArray(field) && field.length === 0)).length;
-  const completionText = `(${completedFields}/${totalFields})`;
-  const isComplete = requiredFields.every(field => field !== null && !(Array.isArray(field) && field.length === 0));
 
   return (
     <>
