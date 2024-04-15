@@ -9,7 +9,7 @@ import {
   Settings,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { PriceForm } from "./_components/price-form";
 import { TitleForm } from "./_components/title-form";
 import { DescriptionForm } from "./_components/description-form";
@@ -103,27 +103,20 @@ async function fetchCategoryData(session: any) {
 
 const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
   const { data: session } = useSession();
-  const [course, setCourse] = useState<Course | undefined>();
-  const [category, setCategory] = useState<CourseCategory[] | undefined>();
-  const [teacher, setTeacher] = useState<User[] | undefined>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const requiredFields = [
-    course?.CourseName,
-    course?.CourseDescription,
-    course?.CoursePrice,
-    course?.CourseCategory,
-    course?.CourseTeacher,
-    course?.CourseModules,
-  ];
+  const [data, setData] = useState<{
+    course?: Course;
+    category?: CourseCategory[];
+    teacher?: User[];
+    loading: boolean;
+    error?: string;
+  }>({
+    loading: true,
+  });
+  const [completedFields, setCompletedFields] = useState(0);
+  const [totalFields, setTotalFields] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
 
-  const totalFields = requiredFields.length;
-  
-  const completedFields = requiredFields.filter(field => field !== null && !(Array.isArray(field) && field.length === 0)).length
-  const completionText = `(${completedFields}/${totalFields})`;
-  const isComplete = requiredFields.every(field => field !== null && !(Array.isArray(field) && field.length === 0));
-
-  useMemo(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const [categoryData, teacherData, courseData] = await Promise.all([
@@ -131,14 +124,15 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
           fetchTeacherData(session),
           fetchCourseData(session, params.courseId),
         ]);
-        setCategory(categoryData);
-        setTeacher(teacherData);
-        setCourse(courseData);
-        setLoading(false);
+        setData({
+          course: courseData,
+          category: categoryData,
+          teacher: teacherData,
+          loading: false,
+        });
       } catch (error) {
         console.error("Error fetching data:", error);
-        setError("Failed to fetch data");
-        setLoading(false);
+        setData({ loading: false, error: "Failed to fetch data" });
       }
     };
 
@@ -147,17 +141,42 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
     }
   }, [session]);
 
-  if (loading) {
+  useEffect(() => {
+    const requiredFields = [
+      data.course?.CourseName,
+      data.course?.CourseDescription,
+      data.course?.CoursePrice,
+      data.course?.CourseCategory,
+      data.course?.CourseTeacher,
+      data.course?.CourseModules,
+    ];
+
+    const totalFields = requiredFields.length;
+    setTotalFields(totalFields);
+
+    const completedFields = requiredFields.filter(
+      (field) => field !== null && !(Array.isArray(field) && field.length === 0)
+    ).length;
+    setCompletedFields(completedFields);
+
+    setIsComplete(completedFields === totalFields);
+  }, [data]);
+
+  const updateCompletedFields = () => {
+    setCompletedFields((prevCompletedFields) => prevCompletedFields + 1);
+  };
+
+  if (data.loading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
+  if (data.error) {
+    return <div>Error: {data.error}</div>;
   }
 
   return (
     <>
-      {!course?.IsPublished && (
+      {!data.course?.IsPublished && (
         <Banner label="This course is unpublished. It will not be visible to the students." />
       )}
       <div className="p-6">
@@ -165,13 +184,13 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
           <div className="flex flex-col gap-y-2">
             <h1 className="text-2xl font-medium">Course setup</h1>
             <span className="text-sm text-slate-700">
-              Complete all fields {completionText}
+              Complete all fields {`(${completedFields}/${totalFields})`}
             </span>
           </div>
           <Actions
             disabled={!isComplete}
-            courseId={course!?.Id}
-            isPublished={course?.IsPublished}
+            courseId={data.course!?.Id}
+            isPublished={data.course?.IsPublished}
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
@@ -180,24 +199,29 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
               <IconBadge icon={LayoutDashboard} />
               <h2 className="text-xl">Customize your course</h2>
             </div>
-            <TitleForm initialData={course!} courseId={course!?.Id} />
-            <DescriptionForm initialData={course!} courseId={course!?.Id} />
-            <ImageForm initialData={course!} courseId={course!?.Id} />
+            <TitleForm initialData={data.course!} courseId={data.course!?.Id} />
+            <DescriptionForm
+              initialData={data.course!}
+              courseId={data.course!?.Id}
+            />
+            <ImageForm initialData={data.course!} courseId={data.course!?.Id} updateCompletedFields={updateCompletedFields}/>
             <CategoryForm
-              initialData={course!}
-              courseId={course!?.Id}
-              options={category!?.map((c) => ({
+              initialData={data.course!}
+              courseId={data.course!?.Id}
+              options={data.category!?.map((c) => ({
                 label: c.CategoryName,
                 value: c.Id,
               }))}
+              updateCompletedFields={updateCompletedFields}
             />
             <TeacherForm
-              initialData={course!}
-              courseId={course!?.Id}
-              options={teacher!?.map((c) => ({
+              initialData={data.course!}
+              courseId={data.course!?.Id}
+              options={data.teacher!?.map((c) => ({
                 label: c.Username,
                 value: c.Id,
               }))}
+              updateCompletedFields={updateCompletedFields}
             />
           </div>
           <div className="space-y-6">
@@ -206,28 +230,42 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
                 <IconBadge icon={ListChecks} />
                 <h2 className="text-xl">Course chapters</h2>
               </div>
-              <ChaptersForm initialData={course!} courseId={course!?.Id} />
+              <ChaptersForm
+                initialData={data.course!}
+                courseId={data.course!?.Id}
+                updateCompletedFields={updateCompletedFields}
+              />
             </div>
             <div>
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={CircleDollarSign} />
                 <h2 className="text-xl">Sell your course</h2>
               </div>
-              <PriceForm initialData={course!} courseId={course!?.Id} />
+              <PriceForm
+                initialData={data.course!}
+                courseId={data.course!?.Id}
+                updateCompletedFields={updateCompletedFields}
+              />
             </div>
             <div>
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={File} />
                 <h2 className="text-xl">Resources & Attachments</h2>
               </div>
-              <AttachmentForm initialData={course!} courseId={course!?.Id} />
+              <AttachmentForm
+                initialData={data.course!}
+                courseId={data.course!?.Id}
+              />
             </div>
             <div>
               <div className="flex items-center gap-x-2">
                 <IconBadge icon={Settings} />
                 <h2 className="text-xl">Course Settings</h2>
               </div>
-              <CourseAccessForm initialData={course!} courseId={course!?.Id} />
+              <CourseAccessForm
+                initialData={data.course!}
+                courseId={data.course!?.Id}
+              />
             </div>
           </div>
         </div>

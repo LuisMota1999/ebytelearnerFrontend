@@ -28,6 +28,7 @@ interface CategoryFormProps {
   initialData: Course;
   courseId: string;
   options: CategoryOptionsProps[];
+  updateCompletedFields: () => void;
 }
 
 const formSchema = z.object({
@@ -38,6 +39,7 @@ export const CategoryForm = ({
   initialData,
   courseId,
   options,
+  updateCompletedFields,
 }: CategoryFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const { data: session } = useSession();
@@ -76,6 +78,9 @@ export const CategoryForm = ({
         }
       );
       if (response.ok) {
+        if (!selectedOption?.label) {
+          updateCompletedFields();
+        }
         const updatedCourse: Course = await response.json();
         setCourse(updatedCourse);
         toast.success("Course category updated with success!");
@@ -85,7 +90,8 @@ export const CategoryForm = ({
           (option) => option.value === updatedCourse?.CourseCategory?.Id
         );
         setSelectedOption(initialSelectedOption);
-        console.log(initialSelectedOption?.label);
+        
+       
       } else {
         throw new Error("Failed to update course category");
       }

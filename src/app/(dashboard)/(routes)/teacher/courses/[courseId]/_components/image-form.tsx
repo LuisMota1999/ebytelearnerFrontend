@@ -11,9 +11,14 @@ import FileUploader from "@/components/file-upload";
 interface ImageFormProps {
   initialData: Course;
   courseId: string;
+  updateCompletedFields: () => void;
 }
 
-export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
+export const ImageForm = ({
+  initialData,
+  courseId,
+  updateCompletedFields,
+}: ImageFormProps) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [image, setImage] = useState<string | null>(
     initialData?.CourseImageURL
@@ -23,6 +28,9 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const handleImageUpdate = (fileId: string) => {
+    if (!initialData?.CourseImageURL) {
+      updateCompletedFields();
+    }
     setImage(`https://lh3.googleusercontent.com/d/${fileId}?authuser=1/view`);
     setIsEditing(false);
   };

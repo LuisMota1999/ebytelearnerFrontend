@@ -18,33 +18,46 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import { Course } from "@/types/types";
-import Combobox  from "@/components/ui/combobox";
+import Combobox from "@/components/ui/combobox";
 import { useSession } from "next-auth/react";
+
+
+interface TeacherFormOptionsProps {
+  label: string;
+  value: string;
+}
 
 interface TeacherFormProps {
   initialData: Course;
   courseId: string;
-  options: { label: string; value: string; }[];
-};
+  options: TeacherFormOptionsProps[];
+  updateCompletedFields: () => void;
+}
 
 const formSchema = z.object({
-   teacherId: z.string().min(1),
+  teacherId: z.string().min(1),
 });
 
 export const TeacherForm = ({
   initialData,
   courseId,
   options,
+  updateCompletedFields,
 }: TeacherFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const { data: session } = useSession();
   const toggleEdit = () => setIsEditing((current) => !current);
   const [course, setCourse] = useState<Course>(initialData);
-
+  const [selectedOption, setSelectedOption] = useState<
+  TeacherFormOptionsProps | undefined
+  >({
+    label: initialData?.CourseTeacher?.Username,
+    value: initialData?.CourseTeacher?.Id,
+  });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      teacherId: initialData?.CourseTeacher?.Id || ""
+      teacherId: initialData?.CourseTeacher?.Id || "",
     },
   });
 
@@ -62,25 +75,31 @@ export const TeacherForm = ({
             Authorization: `Bearer ${session?.AccessToken}`,
           },
           body: JSON.stringify({
-            teacherId: values.teacherId,
+            courseTeacherID: values.teacherId,
           }),
         }
       );
       if (response.ok) {
+        if (!selectedOption?.label) {
+          updateCompletedFields();
+        }
         const updatedCourse: Course = await response.json();
 
         setCourse(updatedCourse);
         toast.success("Course teacher updated with success!");
+        const initialSelectedOption = options.find(
+          (option) => option.value === updatedCourse?.CourseTeacher?.Id
+        );
+        setSelectedOption(initialSelectedOption);
         toggleEdit();
       } else {
-        throw new Error("Failed to update teacher");
+        console.log(response);
+        throw new Error("Failed to update teacher course!");
       }
     } catch {
       toast.error("Something went wrong");
     }
   };
-
-  const selectedOption = options!.find((option) => option.value === course?.CourseTeacher?.Id);
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
@@ -98,17 +117,18 @@ export const TeacherForm = ({
         </Button>
       </div>
       {!isEditing && (
-        <p className={cn(
-          "text-sm mt-2",
-          !course?.CourseTeacher?.Id && "text-slate-500 italic"
-        )}>
+        <p
+          className={cn(
+            "text-sm mt-2",
+            !course?.CourseTeacher?.Id && "text-slate-500 italic"
+          )}
+        >
           {selectedOption?.label || "No teacher"}
         </p>
       )}
       {isEditing && (
-        <Form  {...form}>
+        <Form {...form}>
           <form
-            
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4 mt-4"
           >
@@ -118,21 +138,14 @@ export const TeacherForm = ({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Combobox
-                      options={options}
-                      
-                      {...field}
-                    />
+                    <Combobox options={options} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <div className="flex items-center gap-x-2">
-              <Button
-                disabled={!isValid || isSubmitting}
-                type="submit"
-              >
+              <Button disabled={!isValid || isSubmitting} type="submit">
                 Save
               </Button>
             </div>
@@ -140,5 +153,5 @@ export const TeacherForm = ({
         </Form>
       )}
     </div>
-  )
-}
+  );
+};

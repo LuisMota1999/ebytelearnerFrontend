@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react'; // If you're using React Hooks
 import { useSession } from "next-auth/react";
 
 async function fetchCoursesData(session: any) {
+
   try {
     const returnRowsParam = session?.AccessToken ? `?returnRows=${100}` : "";
     const response = await fetch(
@@ -56,7 +57,7 @@ const CoursesPage = () => {
     };
 
     fetchCourses();
-  }, [session]);
+  }, [session, courses]);
 
   if (loading) {
     return <div>Loading...</div>;

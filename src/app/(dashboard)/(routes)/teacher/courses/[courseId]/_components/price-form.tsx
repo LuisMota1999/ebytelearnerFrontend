@@ -26,6 +26,7 @@ import { useSession } from "next-auth/react";
 interface PriceFormProps {
   initialData: Course;
   courseId: string;
+  updateCompletedFields: () => void;
 };
 
 const formSchema = z.object({
@@ -34,7 +35,8 @@ const formSchema = z.object({
 
 export const PriceForm = ({
   initialData,
-  courseId
+  courseId,
+  updateCompletedFields
 }: PriceFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const { data: session } = useSession();
@@ -54,7 +56,7 @@ export const PriceForm = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     
     try {
-      setIsEditing(true); // Set loading state to true before fetch
+      setIsEditing(true); 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/Update/${courseId}`, {
         method: "PUT",
         headers: {
@@ -66,6 +68,10 @@ export const PriceForm = ({
         }),
       });
       if (response.ok) {
+        if (course?.CoursePrice > 0 ){
+          updateCompletedFields();
+        }
+
         const updatedCourse: Course = await response.json();
         
         setCourse(updatedCourse);

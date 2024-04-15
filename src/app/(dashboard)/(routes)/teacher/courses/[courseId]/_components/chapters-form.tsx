@@ -26,13 +26,18 @@ import { useSession } from "next-auth/react";
 interface ChaptersFormProps {
   initialData: Course & { CourseModules: CourseModule[] };
   courseId: string;
+  updateCompletedFields: () => void;
 }
 
 const formSchema = z.object({
   moduleName: z.string().min(1),
 });
 
-export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
+export const ChaptersForm = ({
+  initialData,
+  courseId,
+  updateCompletedFields,
+}: ChaptersFormProps) => {
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const { data: session } = useSession();
@@ -73,8 +78,11 @@ export const ChaptersForm = ({ initialData, courseId }: ChaptersFormProps) => {
       );
       if (response.ok) {
         form.reset();
+        if (courseModules.length <= 0) {
+          updateCompletedFields();
+        }
         const newModule: CourseModule = await response.json();
-        // Update courseModules state by adding the new module
+
         setCourseModules((prevModules) => [...prevModules, newModule]);
         toast.success("Chapter created");
         toggleCreating();
