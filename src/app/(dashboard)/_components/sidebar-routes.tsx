@@ -22,7 +22,7 @@ interface RouteProps {
   icon: any;
   label: string;
   href?: string;
-  children?: {
+  itemChildren?: {
     icon: any;
     label: string;
     href: string;
@@ -34,7 +34,7 @@ const sharedRoutes: RouteProps[] = [
     icon: Layout,
     label: "Dashboard",
     href: "/",
-    children: [],
+    itemChildren: [],
   },
 ];
 
@@ -42,7 +42,7 @@ const privilegedRoutes: RouteProps[] = [
   {
     icon: GraduationCap,
     label: "Courses",
-    children: [
+    itemChildren: [
       {
         icon: List,
         label: "List",
@@ -63,7 +63,7 @@ const privilegedRoutes: RouteProps[] = [
   {
     icon: PackageOpen,
     label: "Storage",
-    children: [
+    itemChildren: [
       {
         icon: FileHeart,
         label: "Favorites",
@@ -86,13 +86,13 @@ const privilegedRoutes: RouteProps[] = [
     icon: BarChart,
     label: "Analytics",
     href: "/teacher/analytics",
-    children: [],
+    itemChildren: [],
   },
   {
     icon: Settings,
     label: "Settings",
     href: "/settings",
-    children: [],
+    itemChildren: [],
   },
 ];
 
@@ -143,7 +143,7 @@ export const SidebarRoutes: React.FC<{ session: Session }> = ({ session }) => {
               label={route.label}
               href={route.href!}
               onClick={() => handleItemClick(route.label, route.href!)}
-              children={route.children!}
+              itemChildren={route.itemChildren!}
               currentSelectedItem={currentSelectedItem}
             />
           ))}
@@ -160,7 +160,7 @@ export const SidebarRoutes: React.FC<{ session: Session }> = ({ session }) => {
               label={settingsRoute.label}
               href={settingsRoute.href!}
               onClick={() => handleItemClick(currentSelectedItem, currentHref)}
-              children={settingsRoute.children!}
+              itemChildren={settingsRoute.itemChildren!}
               currentSelectedItem={currentSelectedItem}
             />
           )}

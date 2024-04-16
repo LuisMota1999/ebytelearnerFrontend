@@ -7,7 +7,7 @@ interface SidebarItemProps {
   icon: LucideIcon;
   label: string;
   href: string;
-  children: SidebarItemChildrenProps[];
+  itemChildren: SidebarItemChildrenProps[];
   onClick: () => void;
   currentSelectedItem: string;
 }
@@ -23,7 +23,7 @@ export const SidebarItem = ({
   icon: Icon,
   label,
   href,
-  children,
+  itemChildren,
   onClick,
   currentSelectedItem,
 }: SidebarItemProps) => {
@@ -35,10 +35,10 @@ export const SidebarItem = ({
 
   return (
     <>
-      {children.length > 0 ? (
+      {itemChildren.length > 0 ? (
         <AccordionSidebarComponent
           label={label}
-          children={children}
+          itemChildren={itemChildren}
           isActive={isActive}
           onClick={onClick}
           currentSelectedItem={currentSelectedItem}

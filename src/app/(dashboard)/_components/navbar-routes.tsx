@@ -14,9 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "next-auth/react";
-
 import { Check, ChevronsUpDown } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,37 +32,13 @@ import {
 import { Country } from "@/types/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
-
-async function fetchFlagData() {
-  try {
-    const response = await fetch(
-      `https://countriesnow.space/api/v0.1/countries/flag/images`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "*/*",
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    if (response.ok) {
-      const responseBody = await response.json();
-
-      return responseBody.data;
-    } else {
-      throw new Error("Failed to fetch flag data");
-    }
-  } catch (error) {
-    console.error("Error fetching flag data:", error);
-    throw error;
-  }
-}
+import Image from "next/image";
+import { getFlagData } from "@/app/actions";
 
 export const NavbarRoutes = () => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("United Kingdom");
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [flagData, setFlagData] = useState<Country[]>([]);
   const { data: session } = useSession();
   const router = useRouter();
@@ -79,19 +53,16 @@ export const NavbarRoutes = () => {
   useEffect(() => {
     const fetchFlag = async () => {
       try {
-        const flagData = await fetchFlagData();
-        setFlagData(flagData); 
-        console.log(flagData);
+        const flagData = await getFlagData();
+        setFlagData(flagData);
         setLoading(false);
       } catch (error) {
-        setError("Failed to fetch data");
-
-        console.error("Error fetching flag:", error);
+        throw Error("error");
       }
     };
 
     fetchFlag();
-  }, []);
+  }, [session]);
 
   return (
     <div className="w-full flex flex-row-reverse">
@@ -150,16 +121,18 @@ export const NavbarRoutes = () => {
               >
                 {value ? (
                   <div className="flex items-center">
-                    <img
+                    <Image
                       src={
                         flagData.find((flagData) => flagData.name === value)
-                          ?.flag
+                          ?.flag!
                       }
                       alt={`Flag of ${
                         flagData.find((flagData) => flagData.name === value)
                           ?.name
                       }`}
-                      className="w-8 h-6 m-1"
+                      width={28}
+                      height={26}
+                      className="m-1"
                       loading="lazy"
                     />
                     <span className="hidden md:block">
@@ -201,10 +174,12 @@ export const NavbarRoutes = () => {
                         />
 
                         <div key={index} className="flex items-center">
-                          <img
+                          <Image
                             src={flagData.flag}
                             alt={`Flag of ${flagData.name}`}
-                            className="w-8 h-8 rounded-full mr-2"
+                            width={35}
+                            height={40}
+                            className="rounded-full mr-2"
                             loading="lazy"
                           />
                           <span>{flagData.name}</span>

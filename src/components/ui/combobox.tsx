@@ -73,4 +73,6 @@ const Combobox = React.forwardRef<HTMLButtonElement, ComboboxProps>(
   }
 );
 
+Combobox.displayName = 'Combobox';
+
 export default Combobox;

@@ -7,36 +7,8 @@ import CoursesList from "@/components/course/course-List";
 import { GridIcon, RowsIcon } from "lucide-react";
 import { useState, useEffect } from 'react'; // If you're using React Hooks
 import { useSession } from "next-auth/react";
+import { getCoursesData } from "@/app/actions";
 
-async function fetchCoursesData(session: any) {
-
-  try {
-    const returnRowsParam = session?.AccessToken ? `?returnRows=${100}` : "";
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/All${returnRowsParam}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "*/*",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.AccessToken}`,
-        },
-      }
-    );
-    if (response.ok) {
-      const responseBody = await response.json();
-
-      return responseBody;
-    } else {
-      console.log(session?.AccessToken);
-      
-      throw new Error("Failed to fetch course data");
-    }
-  } catch (error) {
-    console.error("Error fetching course data:", error);
-    throw error;
-  }
-}
 
 const CoursesPage = () => {
   const [courses, setCourses] = useState(null);
@@ -46,7 +18,7 @@ const CoursesPage = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const fetchedCourses = await fetchCoursesData(session);
+        const fetchedCourses = await getCoursesData(session);
         setCourses(fetchedCourses); // Update courses state
         setLoading(false);
       } catch (error) {
@@ -56,7 +28,8 @@ const CoursesPage = () => {
       }
     };
 
-    fetchCourses();
+    if(session) 
+      fetchCourses();
   }, [session, courses]);
 
   if (loading) {

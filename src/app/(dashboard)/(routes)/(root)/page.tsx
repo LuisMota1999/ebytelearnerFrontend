@@ -70,7 +70,7 @@ export default function HomePage() {
                     </CardTitle>
                     <p className="text-sm text-gray-600 pt-3 pb-6">
                       If you are going to use a passage of Lorem Ipsum, you need
-                      to be sure there isn't anything.
+                      to be sure there isn&apos;t anything.
                     </p>
 
                     <Button variant="green" size="md">

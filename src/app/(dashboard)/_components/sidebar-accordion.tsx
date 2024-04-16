@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 interface AccordionComponentProps {
   label: string;
-  children: {
+  itemChildren: {
     href?: string;
     label?: string;
     icon?: LucideIcon;
@@ -25,7 +25,7 @@ interface AccordionComponentProps {
 
 const AccordionSidebarComponent: React.FC<AccordionComponentProps> = ({
   label,
-  children,
+  itemChildren,
   isActive,
   onClick,
   currentSelectedItem,
@@ -62,7 +62,7 @@ const AccordionSidebarComponent: React.FC<AccordionComponentProps> = ({
         </AccordionTrigger>
         <AccordionContent className="pb-0">
           <div className="flex flex-col ">
-            {children.map((child, index) => (
+            {itemChildren.map((child, index) => (
               <ButtonSidebarComponent
                 key={index}
                 label={child.label || ""}

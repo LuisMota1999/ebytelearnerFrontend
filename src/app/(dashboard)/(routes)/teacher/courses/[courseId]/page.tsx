@@ -21,85 +21,7 @@ import { ChaptersForm } from "./_components/chapters-form";
 import { AttachmentForm } from "./_components/attachment-form";
 import { TeacherForm } from "./_components/teacher-form";
 import { CourseAccessForm } from "./_components/course-access-form";
-
-async function fetchCourseData(session: any, courseId: string) {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/${courseId}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "*/*",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.AccessToken}`,
-        },
-      }
-    );
-    if (response.ok) {
-      const responseBody = await response.json();
-
-      return responseBody;
-    } else {
-      throw new Error("Failed to fetch course data");
-    }
-  } catch (error) {
-    console.error("Error fetching course data:", error);
-    throw error;
-  }
-}
-
-async function fetchTeacherData(session: any) {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_NEXT_URL}/User/GetTeachers`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "*/*",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.AccessToken}`,
-        },
-      }
-    );
-
-    if (response.ok) {
-      const responseBody = await response.json();
-
-      return responseBody;
-    } else {
-      throw new Error("Failed to fetch teacher list data");
-    }
-  } catch (error) {
-    console.error("Error fetching teacher data:", error);
-    throw error;
-  }
-}
-
-async function fetchCategoryData(session: any) {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_NEXT_URL}/Category/All?returnRows=10`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "*/*",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.AccessToken}`,
-        },
-      }
-    );
-    if (response.ok) {
-      const responseBody = await response.json();
-      console.log(responseBody);
-      return responseBody;
-    } else {
-      throw new Error("Failed to fetch course data");
-    }
-  } catch (error) {
-    console.error("Error fetching course data:", error);
-    throw error;
-  }
-}
+import { getCategoriesData, getCourseData, getTeachersData } from "@/app/actions";
 
 const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
   const { data: session } = useSession();
@@ -120,9 +42,9 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
     const fetchData = async () => {
       try {
         const [categoryData, teacherData, courseData] = await Promise.all([
-          fetchCategoryData(session),
-          fetchTeacherData(session),
-          fetchCourseData(session, params.courseId),
+          getCategoriesData(session),
+          getTeachersData(session),
+          getCourseData(session, params.courseId),
         ]);
         setData({
           course: courseData,
@@ -139,7 +61,7 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
     if (session) {
       fetchData();
     }
-  }, [session]);
+  }, [session, params.courseId]);
 
   useEffect(() => {
     const requiredFields = [

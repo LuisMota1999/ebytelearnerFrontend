@@ -12,33 +12,8 @@ import { CourseModule } from "@/types/types";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import PdfRenderer from "@/components/pdf/PdfRenderer";
+import { getCourseChapter } from "@/app/actions";
 
-async function fetchCourseModuleData(session: any, moduleId: string) {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_NEXT_URL}/Module/${moduleId}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "*/*",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.AccessToken}`,
-        },
-      }
-    );
-    if (response.ok) {
-      const responseBody = await response.json();
-
-      return responseBody;
-    } else {
-      console.log(session?.AccessToken);
-      throw new Error("Failed to fetch course data");
-    }
-  } catch (error) {
-    console.error("Error fetching course data:", error);
-    throw error;
-  }
-}
 const ChapterIdPage = async ({
   params,
 }: {
@@ -46,8 +21,8 @@ const ChapterIdPage = async ({
 }) => {
   
   const session = await getServerSession(nextAuthOptions);
-  const module = await fetchCourseModuleData(session, params.chapterId);
-  const requiredFields = [module?.ModuleName, module?.ModuleDescription];
+  const courseModule  = await getCourseChapter(session, params.chapterId);
+  const requiredFields = [courseModule ?.ModuleName, courseModule?.ModuleDescription];
 
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
@@ -85,7 +60,7 @@ const ChapterIdPage = async ({
                 disabled={!isComplete}
                 courseId={params.courseId}
                 chapterId={params.chapterId}
-                isPublished={module!?.IsPublished}
+                isPublished={courseModule!?.IsPublished}
               />
             </div>
           </div>
@@ -98,12 +73,12 @@ const ChapterIdPage = async ({
                 <h2 className="text-xl">Customize your chapter</h2>
               </div>
               <ChapterTitleForm
-                initialData={module!}
+                initialData={courseModule!}
                 courseId={params.courseId}
                 chapterId={params.chapterId}
               />
               <ChapterDescriptionForm
-                initialData={module!}
+                initialData={courseModule!}
                 courseId={params.courseId}
                 chapterId={params.chapterId}
               />
@@ -114,7 +89,7 @@ const ChapterIdPage = async ({
                 <h2 className="text-xl">Access Settings</h2>
               </div>
               <ChapterAccessForm
-                initialData={module!}
+                initialData={courseModule!}
                 courseId={params.courseId}
                 chapterId={params.chapterId}
               />

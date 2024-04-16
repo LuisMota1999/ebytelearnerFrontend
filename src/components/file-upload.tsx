@@ -164,7 +164,6 @@ export default function FileUploader(props: FileUploaderProps) {
             <Progress
               value={progress}
               className="my-2 bg-slate-200"
-              indicatorColor="bg-green-800"
             />
           )}
         </div>

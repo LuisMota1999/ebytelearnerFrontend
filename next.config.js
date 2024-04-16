@@ -1,5 +1,8 @@
 /** @type import { NextConfig, Domain } from '@types/types'; */
 const nextConfig = {
+  experimental: {
+    serverActions: true,
+  },
   images: {
     domains: [
       "images.unsplash.com",
@@ -12,6 +15,7 @@ const nextConfig = {
     config.resolve.alias.encoding = false;
     return config;
   },
+  swcMinify: true,
 };
 
 module.exports = nextConfig;
