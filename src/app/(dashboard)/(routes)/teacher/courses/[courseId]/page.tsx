@@ -22,6 +22,7 @@ import { AttachmentForm } from "./_components/attachment-form";
 import { TeacherForm } from "./_components/teacher-form";
 import { CourseAccessForm } from "./_components/course-access-form";
 import { getCategoriesData, getCourseData, getTeachersData } from "@/app/actions";
+import Error500 from "@/components/errors/internal-error";
 
 const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
   const { data: session } = useSession();
@@ -93,7 +94,7 @@ const CourseIdPage = ({ params }: { params: { courseId: string } }) => {
   }
 
   if (data.error) {
-    return <div>Error: {data.error}</div>;
+    return <Error500/>;
   }
 
   return (

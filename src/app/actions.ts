@@ -1,5 +1,7 @@
 "use server";
 
+import { revalidateTag } from "next/cache";
+
 export async function getFlagData() {
   try {
     const response = await fetch(
@@ -13,7 +15,6 @@ export async function getFlagData() {
         next: {
           tags: ["flags"],
         },
-        cache: "no-cache",
       }
     );
     if (response.ok) {
@@ -43,6 +44,7 @@ export async function getCourseChapter(session: any, chapterId: string) {
         next: {
           tags: ["module"],
         },
+        cache:"no-cache"
       }
     );
     if (response.ok) {
@@ -73,6 +75,7 @@ export async function getCourseData(session: any, courseId: string) {
         next: {
           tags: ["course"],
         },
+        cache:"no-cache"
       }
     );
     if (response.ok) {
@@ -102,6 +105,7 @@ export async function getTeachersData(session: any) {
         next: {
           tags: ["teachers"],
         },
+        cache:"no-cache"
       }
     );
 
@@ -132,6 +136,7 @@ export async function getCategoriesData(session: any) {
         next: {
           tags: ["categories"],
         },
+        cache:"no-cache"
       }
     );
     if (response.ok) {
@@ -164,19 +169,46 @@ export async function getCoursesData(session: any) {
         next: {
           tags: ["courses"],
         },
+        cache:"no-cache"
       }
     );
     if (response.ok) {
       const responseBody = await response.json();
-
       return responseBody;
     } else {
-      console.log(session?.AccessToken);
-      
       throw new Error("Failed to fetch course data");
     }
   } catch (error) {
-    console.error("Error fetching course data:", error);
     throw error;
+  }
+}
+
+export async function createCourse(values: any, session: any) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/Create`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.AccessToken}`,
+        },
+        body: JSON.stringify({
+          courseName: values.courseName,
+          courseDescription: values.courseDescription,
+          coursePrice: values.coursePrice,
+        }),
+      }
+    );
+
+    if (response.ok) {
+      const newCourse = await response.json();
+      revalidateTag("courses");
+      return newCourse;
+    } else {
+      throw new Error("Failed to create course");
+    }
+  } catch (error) {
+    throw new Error("Failed to create course");
   }
 }

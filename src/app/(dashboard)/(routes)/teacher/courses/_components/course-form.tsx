@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Course } from "@/types/types";
 import { ToastAction } from "@/components/ui/toast";
 import { toast } from "@/components/ui/use-toast";
 import { PlusCircle } from "lucide-react";
@@ -36,6 +34,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { revalidateTag } from "next/cache";
+import { createCourse } from "@/app/actions";
 const formSchema = z.object({
   courseName: z.string().min(3, {
     message: "Course name must have at least 3 characters.",
@@ -49,7 +49,6 @@ const formSchema = z.object({
 });
 
 export const CourseForm = () => {
-  const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const { data: session } = useSession();
 
@@ -62,37 +61,17 @@ export const CourseForm = () => {
     },
   });
   const { isSubmitting } = form.formState;
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/Create`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.AccessToken}`,
-          },
-          body: JSON.stringify({
-            courseName: values.courseName,
-            courseDescription: values.courseDescription,
-            coursePrice: values.coursePrice,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        toast({
-          title: "Course created with success.",
-          description: "Good Job.",
-        });
-        const newCourse: Course = await response.json();
-        router.push(`/teacher/courses/${newCourse.Id}`);
-        form.reset();
-
-        setShowModal(false);
-      } else {
-        throw new Error("Failed to create course");
-      }
+      await createCourse(values, session);
+      form.reset();
+      setShowModal(false);
+      revalidateTag("courses");
+      toast({
+        title: "Course created with success.",
+        description: "Good Job.",
+      });
     } catch (error) {
       toast({
         title: "Uh oh! Something went wrong.",

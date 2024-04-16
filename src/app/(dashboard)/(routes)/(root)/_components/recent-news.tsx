@@ -4,6 +4,7 @@ import { ArticleResponse } from '@/types/types';
 import { fetchDataAndCache } from '@/app/utils/fetchData';
 import ArticleItem from '@/components/article/article-item';
 import NoResults from '@/components/ui/no-results';
+import Error500 from '@/components/errors/internal-error';
 
 const fetcher = async (url: string) => {
   const data = await fetchDataAndCache<ArticleResponse>(
@@ -24,8 +25,7 @@ export default function RecentNews() {
   );
 
   if (error) {
-    console.error('Error fetching recent news:', error);
-    return <div>Error fetching recent news. Please try again later.</div>;
+    return <Error500/>;
   }
 
   if (!articles) {

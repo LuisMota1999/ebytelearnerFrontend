@@ -8,6 +8,7 @@ import { GridIcon, RowsIcon } from "lucide-react";
 import { useState, useEffect } from 'react'; // If you're using React Hooks
 import { useSession } from "next-auth/react";
 import { getCoursesData } from "@/app/actions";
+import Error500 from "@/components/errors/internal-error";
 
 
 const CoursesPage = () => {
@@ -24,7 +25,6 @@ const CoursesPage = () => {
       } catch (error) {
         setError("Failed to fetch data");
         setLoading(false);
-        console.error('Error fetching courses:', error);
       }
     };
 
@@ -37,7 +37,7 @@ const CoursesPage = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <Error500/>
   }
   return (
     <div className="p-6">
