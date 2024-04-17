@@ -44,7 +44,7 @@ export async function getCourseChapter(session: any, chapterId: string) {
         next: {
           tags: ["module"],
         },
-        cache:"no-cache"
+        cache: "no-cache",
       }
     );
     if (response.ok) {
@@ -75,7 +75,7 @@ export async function getCourseData(session: any, courseId: string) {
         next: {
           tags: ["course"],
         },
-        cache:"no-cache"
+        cache: "no-cache",
       }
     );
     if (response.ok) {
@@ -105,7 +105,7 @@ export async function getTeachersData(session: any) {
         next: {
           tags: ["teachers"],
         },
-        cache:"no-cache"
+        cache: "no-cache",
       }
     );
 
@@ -136,12 +136,12 @@ export async function getCategoriesData(session: any) {
         next: {
           tags: ["categories"],
         },
-        cache:"no-cache"
+        cache: "no-cache",
       }
     );
     if (response.ok) {
       const responseBody = await response.json();
-      
+
       return responseBody;
     } else {
       throw new Error("Failed to fetch course data");
@@ -152,9 +152,7 @@ export async function getCategoriesData(session: any) {
   }
 }
 
-
 export async function getCoursesData(session: any) {
-
   try {
     const returnRowsParam = session?.AccessToken ? `?returnRows=${100}` : "";
     const response = await fetch(
@@ -169,7 +167,7 @@ export async function getCoursesData(session: any) {
         next: {
           tags: ["courses"],
         },
-        cache:"no-cache"
+        cache: "no-cache",
       }
     );
     if (response.ok) {
@@ -209,6 +207,32 @@ export async function createCourse(values: any, session: any) {
       throw new Error("Failed to create course");
     }
   } catch (error) {
+    throw new Error("Failed to create course");
+  }
+}
+
+export async function publishCourse(isPublished: boolean, courseId: string, session: any) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_NEXT_URL}/Course/Update/${courseId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.AccessToken}`,
+        },
+        body: JSON.stringify({
+          courseIsPublished: isPublished,
+        }),
+      }
+    );
+    if (response.ok) {
+      revalidateTag("course");
+    } else {
+      console.log(response);
+    }
+  } catch (error) {
+    console.log(error);
     throw new Error("Failed to create course");
   }
 }

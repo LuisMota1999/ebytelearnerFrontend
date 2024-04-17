@@ -35,12 +35,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { getFlagData } from "@/app/actions";
 
-export const NavbarRoutes = () => {
+export const NavbarRoutes = ({session}: any) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("United Kingdom");
   const [loading, setLoading] = useState<boolean>(true);
   const [flagData, setFlagData] = useState<Country[]>([]);
-  const { data: session } = useSession();
   const router = useRouter();
   async function logout() {
     await signOut({

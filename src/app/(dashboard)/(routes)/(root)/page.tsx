@@ -17,7 +17,8 @@ import { ImNewspaper } from "react-icons/im";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import StatementChart from "@/components/chart/StatementChart";
 import { DailyAmount } from "@/components/chart/types";
-
+import character3 from "../../../../../public/assets/illustrations/characters/character_3.png"
+import teacherDashboard from "../../../../../public/assets/teacherDashboard.png"
 import Loading from "./loading";
 import { RecentSessions } from "./_components/recent-sessions";
 import RecentNews  from "./_components/recent-news";
@@ -85,7 +86,7 @@ export default function HomePage() {
                       height={250}
                       width={250}
                       alt="teacher"
-                      src="/assets/teacherDashboard.png"
+                      src={teacherDashboard}
                       className="self-center"
                       
                     />
@@ -93,7 +94,7 @@ export default function HomePage() {
                       height={75}
                       width={75}
                       alt="teacherPerson"
-                      src="/assets/character_3.png"
+                      src={character3}
                       className="self-center inset-0 w-auto h-auto object-cover ml-[-60px]"
                       loading="lazy"
                     />

@@ -6,14 +6,14 @@ import { Button } from "../ui/button";
 export const Error500 = () => {
   return (
     <div className="flex flex-col justify-center items-center h-full text-center m-auto">
-      <h1 className="text-4xl font-bold">
+      <h1 className="text-3xl 2xl:text-5xl font-bold">
         500 Internal Server Error
       </h1>
-      <p className="text-slate-500 text mb-16">
+      <p className="text-slate-500 text-sm 2xl:text-base mb-8 2xl:mb-16">
         Have you tried turning it off and on again?
       </p>
 
-      <div className="flex justify-center mb-8">
+      <div className="flex justify-center mb-6 2xl:mb-8">
         <Image
           alt="internalError"
           src={internalError}
@@ -28,7 +28,7 @@ export const Error500 = () => {
           loading="lazy"
         />
       </div>
-      <Button variant={"default"}>Go Back</Button>
+
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { Navbar } from "./_components/navbar";
 import { Sidebar } from "./_components/sidebar";
 import { getServerSession } from "next-auth";
-import { ReactNode, Suspense } from "react";
+import { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { nextAuthOptions } from "../api/auth/[...nextauth]/route";
 
@@ -23,7 +23,7 @@ export default async function DashboardLayout({
   return (
     <div className="h-full">
       <div className="h-[80px] md:pl-56 fixed inset-y-0 w-full !z-50">
-        <Navbar />
+        <Navbar session={session}/>
       </div>
       <div className="hidden md:flex h-full w-56 flex-col fixed inset-y-0 z-50">
         <Sidebar session={session}/>
